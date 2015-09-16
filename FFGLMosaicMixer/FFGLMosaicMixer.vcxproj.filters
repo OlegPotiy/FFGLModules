@@ -1,0 +1,89 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="FFGL Headers">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="FFGL Sources">
+      <UniqueIdentifier>{ecacbeea-9952-4094-bba8-5559452854bd}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\FFGL Lib\FFGL.h">
+      <Filter>FFGL Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\FFGL Lib\FFGLExtensions.h">
+      <Filter>FFGL Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\FFGL Lib\FFGLFBO.h">
+      <Filter>FFGL Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\FFGL Lib\FFGLLib.h">
+      <Filter>FFGL Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\FFGL Lib\FFGLPluginInfo.h">
+      <Filter>FFGL Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\FFGL Lib\FFGLPluginManager.h">
+      <Filter>FFGL Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\FFGL Lib\FFGLPluginManager_inl.h">
+      <Filter>FFGL Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\FFGL Lib\FFGLPluginSDK.h">
+      <Filter>FFGL Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\FFGL Lib\FFGLShader.h">
+      <Filter>FFGL Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\FFGL Lib\FreeFrame.h">
+      <Filter>FFGL Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="FFGLMosaicMixer.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GLQuadNode.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GLCommons.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\FFGL Lib\FFGL.cpp">
+      <Filter>FFGL Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="..\FFGL Lib\FFGLExtensions.cpp">
+      <Filter>FFGL Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="..\FFGL Lib\FFGLFBO.cpp">
+      <Filter>FFGL Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="..\FFGL Lib\FFGLPluginInfo.cpp">
+      <Filter>FFGL Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="..\FFGL Lib\FFGLPluginInfoData.cpp">
+      <Filter>FFGL Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="..\FFGL Lib\FFGLPluginManager.cpp">
+      <Filter>FFGL Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="..\FFGL Lib\FFGLPluginSDK.cpp">
+      <Filter>FFGL Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="..\FFGL Lib\FFGLShader.cpp">
+      <Filter>FFGL Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="FFGLMosaicMixer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="GLQuadNode.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>
