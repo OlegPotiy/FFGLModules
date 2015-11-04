@@ -42,6 +42,7 @@ protected:
 private:
 
 	FFGLExtensions m_extensions;
+	FFGLShader m_shader;
 	
 	struct GLVertexTriplet	{	GLfloat x,y,z;	};
 	struct GLTexcoords		{	GLfloat s,t;	};

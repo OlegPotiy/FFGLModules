@@ -73,7 +73,8 @@ DWORD FFGLFlows::InitGL(const FFGLViewportStruct *vp)
 	return FF_SUCCESS;
 #else
 	m_extensions.Initialize();
-	bool lIsExtSupported = m_extensions.isExtensionSupported("GL_ARB_vertex_buffer_object");
+	bool lIsExtSupported =	m_extensions.isExtensionSupported("GL_ARB_vertex_buffer_object") && 
+							m_extensions.isExtensionSupported("GL_ARB_texture_float");
 
 
 	return lIsExtSupported ? FF_SUCCESS : FF_FAIL;
@@ -291,6 +292,7 @@ void FFGLFlows::CreateTextures(int width, int height, int texNum)
 
 	glGenTextures(texNum, this->noiseTexturesIds);
 
+	GLenum errCode;
 
 	for (k = 0; k < texNum; k++)
 	{
@@ -298,15 +300,20 @@ void FFGLFlows::CreateTextures(int width, int height, int texNum)
 		for (i = 0; i < width*height; i++)
 			pat[i] = lut[(t + phase[i]) % 255];
 
-		glBindTexture(GL_TEXTURE_2D, this->noiseTexturesIds[k]);
-		GLenum errCode = glGetError();
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-		errCode = glGetError();
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-		errCode = glGetError();
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_LUMINANCE32F_ARB, width, height, 0, GL_LUMINANCE, GL_UNSIGNED_BYTE, pat);
+		glBindTexture(GL_TEXTURE_2D, this->noiseTexturesIds[k]);		
 		errCode = glGetError();
 
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+		errCode = glGetError();
+
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+		errCode = glGetError();
+
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_LUMINANCE8, width, height, 0, GL_LUMINANCE, GL_UNSIGNED_BYTE, pat);
+		errCode = glGetError();
+		if (errCode != 0)
+			errCode = glGetError();
+		
 	}
 
 	delete phase;
