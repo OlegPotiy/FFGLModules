@@ -329,7 +329,7 @@ typedef void (APIENTRY *glRenderbufferStorageEXTPROC) (GLenum target, GLenum int
 #define	GL_LUMINANCE16F_ARB                 0x881E
 #define	GL_LUMINANCE_ALPHA16F_ARB           0x881F
 
-
+#define GL_SHADING_LANGUAGE_VERSION			0x8B8C
 
 /* GL types for handling shader object handles and characters */
 typedef char GLcharARB;		/* native character */

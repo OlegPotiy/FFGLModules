@@ -47,9 +47,9 @@ FFGLFlows::FFGLFlows() :CFreeFrameGLPlugin()
 	SetMinInputs(1);
 	SetMaxInputs(1);
 
-	SetParamInfo(FFPARAM_VALUE1_NOISE_BLENDING_FACTOR, "Noise fraction", FF_TYPE_STANDARD, this->alphaNoisesTexture );
-	SetParamInfo(FFPARAM_VALUE2_TEXTURE_BLENDING_FACTOR, "Img fraction", FF_TYPE_STANDARD, this->alphaImageTexture );
-	SetParamInfo(FFPARAM_VALUE3_NOISE_TEXTURES_AMOUNT, "Noises amount", FF_TYPE_STANDARD, ((float)this->noiseTexturesAmount)/((float)this->maxNoiseTexturesAmount));
+	SetParamInfo(FFPARAM_VALUE1_NOISE_BLENDING_FACTOR, "Noise fraction", FF_TYPE_STANDARD, this->alphaNoisesTexture);
+	SetParamInfo(FFPARAM_VALUE2_TEXTURE_BLENDING_FACTOR, "Img fraction", FF_TYPE_STANDARD, this->alphaImageTexture);
+	SetParamInfo(FFPARAM_VALUE3_NOISE_TEXTURES_AMOUNT, "Noises amount", FF_TYPE_STANDARD, ((float)this->noiseTexturesAmount) / ((float)this->maxNoiseTexturesAmount));
 	SetParamInfo(FFPARAM_VALUE4_NOISE_TEXTURES_DIMENSION, "Noises dim", FF_TYPE_STANDARD, ((float)this->noiseTexturesDimension) / ((float)this->maxNoiseTexturesDimension));
 
 	SetParamInfo(FFPARAM_VALUE5_XFACTOR, "X Factor", FF_TYPE_STANDARD, this->xFactor);
@@ -63,22 +63,113 @@ FFGLFlows::~FFGLFlows()
 {
 }
 
+
+char *vertexShaderCode =
+"void main()"
+"{"
+"  gl_Position = gl_ModelViewProjectionMatrix * gl_Vertex;"
+"  gl_TexCoord[0] = gl_MultiTexCoord0;"
+"  gl_TexCoord[1] = gl_MultiTexCoord1;"
+"  gl_TexCoord[2] = gl_MultiTexCoord2;"
+"  gl_FrontColor = gl_Color;"
+"}";
+
+
+char *fragmentShaderCode =
+"uniform sampler2D texture0;"
+"uniform sampler2D texture1;"
+"uniform sampler2D texture2;"
+"uniform float alpha;"
+"uniform float velocity;"
+"void main() "
+"{"
+//"	vec4 field = velocity * texture2D(texture2, gl_TexCoord[2]);"
+"   vec2 texCoord = gl_TexCoord[0].xy;"
+"	vec2 coords = vec2(-1.0,-1.0) + 2.0 * texCoord;"
+"	vec2 field = velocity * vec2(coords.y,coords.x);"
+"	vec2 samplerCoord = texCoord - field;"
+"	vec4 srcColor = texture2D(texture0, samplerCoord);"
+"	vec4 noiseColor = texture2D(texture1, vec2(texCoord.s, texCoord.t));"
+"	gl_FragColor = (1-alpha) * srcColor + alpha * noiseColor;"
+"}";
+
+
+
 DWORD FFGLFlows::InitGL(const FFGLViewportStruct *vp)
 {
+	m_extensions.Initialize();
+	m_shader.SetExtensions(&m_extensions);
+
+	bool lIsExtSupported = m_extensions.isExtensionSupported("GL_ARB_vertex_buffer_object") &&
+		m_extensions.isExtensionSupported("GL_ARB_texture_float") &&
+		m_extensions.isExtensionSupported("GL_ARB_shader_objects");
+
+	if (!lIsExtSupported)
+		return FF_FAIL;
+
+	const GLubyte * glslInfo = glGetString(GL_SHADING_LANGUAGE_VERSION);
+
+	int isCompiled = m_shader.Compile(vertexShaderCode, fragmentShaderCode);
+
+	if (isCompiled != 1)
+		return FF_FAIL;
+
+	this->fbos = CreateFBO(vp);
+	if (this->fbos == nullptr)
+		return FF_FAIL;
+
+	/*
+	m_extensions.glGenFramebuffersEXT(1, &frameBufferId);
+	m_extensions.glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, frameBufferId);
+
+
+	glGenTextures(1, &renderedTexture);
+	glBindTexture(GL_TEXTURE_2D, renderedTexture);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, vp->width, vp->height, 0, GL_RGB, GL_UNSIGNED_BYTE, 0);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+	m_extensions.glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, GL_COLOR_ATTACHMENT0_EXT, GL_TEXTURE_2D, renderedTexture, 0);
+
+	GLenum status = m_extensions.glCheckFramebufferStatusEXT(GL_FRAMEBUFFER_EXT);
+	if (status != GL_FRAMEBUFFER_COMPLETE_EXT)
+		return FF_FAIL;
+
+
+	m_extensions.glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, 0);
+	*/
+
+	CreateFieldTexture(vp->width, vp->height, 0);
+
+	m_shader.BindShader();
+
+
+	//m_inputTextureLocation = m_shader.FindUniform("inputTexture");	
+	m_inputTextureLocation = m_shader.FindUniform("texture0");
+	m_extensions.glUniform1iARB(m_inputTextureLocation, 0);
+
+	m_inputTextureLocation = m_shader.FindUniform("texture1");
+	m_extensions.glUniform1iARB(m_inputTextureLocation, 1);
+
+	m_inputTextureLocation = m_shader.FindUniform("texture2");
+	m_extensions.glUniform1iARB(m_inputTextureLocation, 2);
 	
 
 
+	//the 0 means that the 'inputTexture' in
+	//the shader will use the texture bound to GL texture unit 0
+	//static float red[4] = { 0.0f, 1.0f, 0.0f, 1.0f };
 
-#ifndef  USE_VBO
+	
+	//m_extensions.glUniform4fvARB (m_inputTextureLocation, 1, red);
+
+	m_shader.UnbindShader();
+
+
+	
+	
+
+
 	return FF_SUCCESS;
-#else
-	m_extensions.Initialize();
-	bool lIsExtSupported =	m_extensions.isExtensionSupported("GL_ARB_vertex_buffer_object") && 
-							m_extensions.isExtensionSupported("GL_ARB_texture_float");
-
-
-	return lIsExtSupported ? FF_SUCCESS : FF_FAIL;
-#endif
 }
 
 DWORD FFGLFlows::DeInitGL()
@@ -100,6 +191,130 @@ DWORD FFGLFlows::ProcessOpenGL(ProcessOpenGLStruct *pGL)
 
 	FFGLTextureStruct &Texture = *(pGL->inputTextures[0]);
 
+	//get the max s,t that correspond to the 
+	//width,height of the used portion of the allocated texture space
+	FFGLTexCoords maxCoords = GetMaxGLTexCoords(Texture);
+
+	GLint systemCurrentFbo;
+	glGetIntegerv(GL_FRAMEBUFFER_BINDING_EXT, &systemCurrentFbo);
+
+
+	GLuint srcTexture;
+	GLuint dstRenderBuffer;
+	GLuint dstTexture;
+	
+	if (this->noiseTexturesIds == NULL)
+	{
+		this->CreateTextures(this->noiseTexturesDimension, this->noiseTexturesDimension, this->noiseTexturesAmount);
+	}
+
+
+	if (fbos->isEven)
+	{	
+		// Even:
+		srcTexture = fbos->oddTextureId;
+		dstRenderBuffer = fbos->evenBufferId;
+		dstTexture = fbos->evenTextureId;
+
+		fbos->isEven = false;
+	}
+	else
+	{
+		// Odd:
+		srcTexture = IsFirstFrame ? Texture.Handle : fbos->evenTextureId;
+		dstRenderBuffer = fbos->oddBufferId;
+		dstTexture = fbos->oddTextureId;
+
+		fbos->isEven = true;
+	}
+
+	IsFirstFrame = false;
+
+
+	
+
+	glEnable(GL_TEXTURE_2D);
+
+#define SHADER_PROC
+	// set rendering destination to FBO
+	m_extensions.glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, dstRenderBuffer);
+	glClear(GL_COLOR_BUFFER_BIT);
+	m_shader.BindShader();
+
+
+	GLuint paramId = m_shader.FindUniform("alpha");
+	m_extensions.glUniform1fARB(paramId, alphaNoisesTexture);
+
+	paramId = m_shader.FindUniform("velocity");
+	m_extensions.glUniform1fARB(paramId, this->velocity );
+
+
+
+	m_extensions.glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, srcTexture);
+
+	m_extensions.glActiveTexture(GL_TEXTURE1);
+	glBindTexture(GL_TEXTURE_2D, this->noiseTexturesIds[iCounter]);
+
+	m_extensions.glActiveTexture(GL_TEXTURE2);
+	glBindTexture(GL_TEXTURE_2D, this->fieldTextureId);
+
+	glBegin(GL_QUADS);
+
+	//lower left
+	m_extensions.glMultiTexCoord2f(GL_TEXTURE0, 0, 0);
+	m_extensions.glMultiTexCoord2f(GL_TEXTURE1, 0, 0);
+	m_extensions.glMultiTexCoord2f(GL_TEXTURE2, 0, 0);
+	glVertex2f(-1, -1);
+
+	//upper left
+	m_extensions.glMultiTexCoord2f(GL_TEXTURE0, 0, maxCoords.t);
+	m_extensions.glMultiTexCoord2f(GL_TEXTURE1, 0, maxCoords.t);
+	m_extensions.glMultiTexCoord2f(GL_TEXTURE2, 0, maxCoords.t);
+	glVertex2f(-1, 1);
+
+	//upper right
+	m_extensions.glMultiTexCoord2f(GL_TEXTURE0, maxCoords.s, maxCoords.t);
+	m_extensions.glMultiTexCoord2f(GL_TEXTURE1, maxCoords.s, maxCoords.t);
+	m_extensions.glMultiTexCoord2f(GL_TEXTURE2, maxCoords.s, maxCoords.t);
+	glVertex2f(1, 1);
+
+	//lower right
+	m_extensions.glMultiTexCoord2f(GL_TEXTURE0, maxCoords.s, 0);
+	m_extensions.glMultiTexCoord2f(GL_TEXTURE1, maxCoords.s, 0);
+	m_extensions.glMultiTexCoord2f(GL_TEXTURE2, maxCoords.s, 0);
+	glVertex2f(1, -1);
+	glEnd();
+	//unbind the input texture
+	glBindTexture(GL_TEXTURE_2D, 0);
+	m_shader.UnbindShader();
+	m_extensions.glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, systemCurrentFbo);
+#undef SHADER_PROC
+
+	glBindTexture(GL_TEXTURE_2D, dstTexture);
+
+	glBegin(GL_QUADS);
+
+	//lower left	
+	glTexCoord2d(0, 0);
+	glVertex2f(-1, -1);
+
+	//upper left
+	glTexCoord2d(0, maxCoords.t);
+	glVertex2f(-1, 1);
+
+	//upper right
+	glTexCoord2d(maxCoords.s, maxCoords.t);
+	glVertex2f(1, 1);
+
+	//lower right
+	glTexCoord2d(maxCoords.s, 0);
+	glVertex2f(1, -1);
+	glEnd();
+
+	/*
+	FFGLTextureStruct &Texture = *(pGL->inputTextures[0]);
+
 	if (this->mainTextureId == NULL)
 	{
 		this->mainTextureId = new GLuint[1];
@@ -110,16 +325,13 @@ DWORD FFGLFlows::ProcessOpenGL(ProcessOpenGLStruct *pGL)
 		glTexImage2D(GL_TEXTURE_2D, 0, 4, Texture.Width, Texture.Height, 0, GL_RGBA, GL_UNSIGNED_BYTE, 0);
 	}
 
-	if (this->noiseTexturesIds == NULL)
-	{
-		this->CreateTextures(this->noiseTexturesDimension, this->noiseTexturesDimension, this->noiseTexturesAmount);
-	}
+	
 
 	//enable texturemapping
 	glEnable(GL_TEXTURE_2D);
 
 
-	//get the max s,t that correspond to the 
+	//get the max s,t that correspond to the
 	//width,height of the used portion of the allocated texture space
 	FFGLTexCoords maxCoords = GetMaxGLTexCoords(Texture);
 
@@ -138,7 +350,7 @@ DWORD FFGLFlows::ProcessOpenGL(ProcessOpenGLStruct *pGL)
 	glLoadIdentity();
 
 	glBindTexture(GL_TEXTURE_2D, *(this->mainTextureId));
-	
+
 	glBegin(GL_QUADS);
 
 	float deltha = -0.005;
@@ -189,7 +401,7 @@ DWORD FFGLFlows::ProcessOpenGL(ProcessOpenGLStruct *pGL)
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 	glBindTexture(GL_TEXTURE_2D, this->noiseTexturesIds[iCounter]);
-	
+
 
 
 	glBegin(GL_QUADS);
@@ -212,7 +424,7 @@ DWORD FFGLFlows::ProcessOpenGL(ProcessOpenGLStruct *pGL)
 
 	glEnd();
 
-	
+
 
 	glColor4f(1, 1, 1, 0.3*this->alphaImageTexture);
 	glBindTexture(GL_TEXTURE_2D, Texture.Handle);
@@ -237,7 +449,7 @@ DWORD FFGLFlows::ProcessOpenGL(ProcessOpenGLStruct *pGL)
 	glVertex3f(1, -1, 0.1);
 
 	glEnd();
-	
+
 	//disable blending
 	glDisable(GL_BLEND);
 
@@ -252,11 +464,13 @@ DWORD FFGLFlows::ProcessOpenGL(ProcessOpenGLStruct *pGL)
 		GLenum resultCode = glGetError();
 		GLint dfdf = resultCode;
 	}
-
+	*/
 
 	glMatrixMode(GL_PROJECTION);
 	//Restoring projection matrix
 	glPopMatrix();
+
+
 
 	//unbind the texture
 	glBindTexture(GL_TEXTURE_2D, 0);
@@ -264,14 +478,60 @@ DWORD FFGLFlows::ProcessOpenGL(ProcessOpenGLStruct *pGL)
 	//disable texturemapping
 	glDisable(GL_TEXTURE_2D);
 
-
-
 	//restore default color
 	glColor4f(1.f, 1.f, 1.f, 1.f);
+
+
+	this->iCounter++;
+	this->iCounter %= this->noiseTexturesAmount;
 
 	return FF_SUCCESS;
 }
 
+
+FFGLFlows::FBOPair* FFGLFlows::CreateFBO(const FFGLViewportStruct *viewportStruct)
+{
+	GLenum status;
+	FBOPair* pair = new FBOPair();
+
+	// Init evenBufferId/evenTextureId
+	m_extensions.glGenFramebuffersEXT(1, &pair->evenBufferId);
+	m_extensions.glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, pair->evenBufferId);
+
+	glGenTextures(1, &pair->evenTextureId);
+	glBindTexture(GL_TEXTURE_2D, pair->evenTextureId);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, viewportStruct->width, viewportStruct->height, 0, GL_RGB, GL_UNSIGNED_BYTE, 0);
+
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+
+	m_extensions.glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, GL_COLOR_ATTACHMENT0_EXT, GL_TEXTURE_2D, pair->evenTextureId, 0);
+
+	status = m_extensions.glCheckFramebufferStatusEXT(GL_FRAMEBUFFER_EXT);
+	if (status != GL_FRAMEBUFFER_COMPLETE_EXT)
+		return nullptr;
+
+	// Init oddBufferId/oddTextureId
+	m_extensions.glGenFramebuffersEXT(1, &pair->oddBufferId);
+	m_extensions.glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, pair->oddBufferId);
+
+	glGenTextures(1, &pair->oddTextureId);
+	glBindTexture(GL_TEXTURE_2D, pair->oddTextureId);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, viewportStruct->width, viewportStruct->height, 0, GL_RGB, GL_UNSIGNED_BYTE, 0);
+
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+
+	m_extensions.glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, GL_COLOR_ATTACHMENT0_EXT, GL_TEXTURE_2D, pair->oddTextureId, 0);
+
+	status = m_extensions.glCheckFramebufferStatusEXT(GL_FRAMEBUFFER_EXT);
+	if (status != GL_FRAMEBUFFER_COMPLETE_EXT)
+		return nullptr;
+
+	pair->isEven = false;
+	
+	return pair;
+}
 
 void FFGLFlows::CreateTextures(int width, int height, int texNum)
 {
@@ -279,7 +539,7 @@ void FFGLFlows::CreateTextures(int width, int height, int texNum)
 	int *phase = new int[width * height];
 	GLubyte *pat = new GLubyte[width * height];
 	this->noiseTexturesIds = new GLuint[texNum];
-	
+
 
 	int i, k, t;
 
@@ -300,7 +560,7 @@ void FFGLFlows::CreateTextures(int width, int height, int texNum)
 		for (i = 0; i < width*height; i++)
 			pat[i] = lut[(t + phase[i]) % 255];
 
-		glBindTexture(GL_TEXTURE_2D, this->noiseTexturesIds[k]);		
+		glBindTexture(GL_TEXTURE_2D, this->noiseTexturesIds[k]);
 		errCode = glGetError();
 
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
@@ -313,7 +573,7 @@ void FFGLFlows::CreateTextures(int width, int height, int texNum)
 		errCode = glGetError();
 		if (errCode != 0)
 			errCode = glGetError();
-		
+
 	}
 
 	delete phase;
@@ -321,6 +581,81 @@ void FFGLFlows::CreateTextures(int width, int height, int texNum)
 
 }
 
+void FFGLFlows::CreateFieldTexture(int width, int height, float param)
+{
+	if (fieldTextureId == 0)
+	{
+		glGenTextures(1, &fieldTextureId);
+	}
+	else
+	{
+		glDeleteTextures(1, &fieldTextureId);
+		glGenTextures(1, &fieldTextureId);
+	}
+
+	float * fieldData = new float[width*height * 3];
+	bool isFirst = true;
+
+	
+	float hDelta = 2.0 / (width-1);
+	float vDelta = 2.0 / (height-1);
+
+	
+	for (int i = 0; i < height; i++)
+	{
+		int offset = 3 * i * width;
+		for (int j = 0; j < width; j++)
+		{	
+			/*
+			float xCoord = -1.0 + ((float)j) * hDelta;
+			float yCoord = -1.0 + ((float)i) * vDelta;
+
+			float sCoord = ((float)j) * sDelta - 0.1 * (this->velocity - 0.5)  * sinf(yCoord * 10.0 * (this->yFactor - this->yShift));
+			float tCoord = ((float)i) * tDelta + 0.1 * (this->velocity - 0.5) * sinf(1.75*xCoord * 10.0 * (this->xFactor - this->xShift));
+			*/
+
+			float x = -1.0 + ((float)j) * hDelta;
+			float y = -1.0 + ((float)i) * vDelta;
+
+
+			fieldData[offset + 0] = cos(y);//sCoord;
+			fieldData[offset + 1] = sin(x);//tCoord;
+			fieldData[offset + 2] = 0.0;
+
+			/*
+			if (isFirst)
+			{
+				fieldData[offset + 0] = 1;
+				fieldData[offset + 1] = 1;
+				fieldData[offset + 2] = 1;
+				isFirst = false;
+			}
+			else
+			{
+				
+			}*/
+			offset += 3;
+		}
+	}
+
+	/*
+	fieldData[width*height * 3 - 1] = 1;
+	fieldData[width*height * 3 - 2] = 1;
+	fieldData[width*height * 3 - 3] = 1;
+	*/
+
+	glBindTexture(GL_TEXTURE_2D, fieldTextureId);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB32F_ARB, width, height, 0, GL_RGB, GL_FLOAT, fieldData);
+
+	GLenum error = glGetError();
+	
+	//unbind the texture
+	glBindTexture(GL_TEXTURE_2D, 0);
+
+	delete[] fieldData;
+}
 
 DWORD FFGLFlows::GetParameter(DWORD dwIndex)
 {
@@ -331,7 +666,7 @@ DWORD FFGLFlows::GetParameter(DWORD dwIndex)
 	case FFPARAM_VALUE1_NOISE_BLENDING_FACTOR:
 		*((float *)(unsigned)(&dwRet)) = this->alphaNoisesTexture;
 		return dwRet;
-		
+
 	case FFPARAM_VALUE2_TEXTURE_BLENDING_FACTOR:
 		*((float *)(unsigned)(&dwRet)) = this->alphaImageTexture;
 		return dwRet;
@@ -358,16 +693,16 @@ DWORD FFGLFlows::GetParameter(DWORD dwIndex)
 
 	case FFPARAM_VALUE8_XSHIFT:
 		*((float *)(unsigned)(&dwRet)) = this->xShift;
-	return dwRet;
+		return dwRet;
 
 	case FFPARAM_VALUE9_YSHIFT:
 		*((float *)(unsigned)(&dwRet)) = this->yShift;
-	return dwRet;
+		return dwRet;
 
 		/*
 	case FFPARAM_VALUE2_SCALE  :
 	//sizeof(DWORD) must == sizeof(float)
-	
+
 
 	case FFPARAM_VALUE3_RX:
 	//sizeof(DWORD) must == sizeof(float)
@@ -404,26 +739,28 @@ DWORD FFGLFlows::SetParameter(const SetParameterStruct* pParam)
 
 	if (pParam != NULL)
 	{
+		bool isFieldChanged = false;
+
 		float fNewValue = *((float *)(unsigned)&(pParam->NewParameterValue));
 
-		switch (pParam->ParameterNumber) 
+		switch (pParam->ParameterNumber)
 		{
 
-			
+
 		case FFPARAM_VALUE1_NOISE_BLENDING_FACTOR:
-		this->alphaNoisesTexture = fNewValue;
-		break;
+			this->alphaNoisesTexture = fNewValue;
+			break;
 
 		case FFPARAM_VALUE2_TEXTURE_BLENDING_FACTOR:
 			this->alphaImageTexture = fNewValue;
-		break;
-		
+			break;
+
 		case FFPARAM_VALUE3_NOISE_TEXTURES_AMOUNT:
 		{
 			int newAmount = fNewValue * (float)this->maxNoiseTexturesAmount;
 			newAmount = newAmount == 0 ? 1 : newAmount;
 			if (newAmount != this->noiseTexturesAmount)
-			{				
+			{
 				if (this->noiseTexturesIds != NULL)
 				{
 					glDeleteTextures(this->noiseTexturesAmount, this->noiseTexturesIds);
@@ -456,61 +793,81 @@ DWORD FFGLFlows::SetParameter(const SetParameterStruct* pParam)
 
 
 		case FFPARAM_VALUE5_XFACTOR:
+		{
+			isFieldChanged = (this->xFactor != fNewValue);
 			this->xFactor = fNewValue;
+		};
 		break;
 
 		case FFPARAM_VALUE6_YFACTOR:
+		{
+			isFieldChanged = (this->yFactor != fNewValue);
 			this->yFactor = fNewValue;
+		};
 		break;
 
 		case FFPARAM_VALUE7_VELOCITY:
+		{
 			this->velocity = fNewValue;
+		};
 		break;
 
 		case FFPARAM_VALUE8_XSHIFT:
+		{
+			isFieldChanged = (this->xShift != fNewValue);
 			this->xShift = fNewValue;
+		};
 		break;
 
 		case FFPARAM_VALUE9_YSHIFT:
+		{
+			isFieldChanged = (this->yShift != fNewValue);
 			this->yShift = fNewValue;
-		break;
-
-		
-
-		/*
-		case FFPARAM_VALUE3_RX:
-		this->fXAngle = fNewValue;
-		break;
-
-		case FFPARAM_VALUE4_RY:
-		this->fYAngle = fNewValue;
-		break;
-
-		case FFPARAM_VALUE5_DISTANCE:
-		if (this->fDistance != fNewValue)
-		{
-		this->fDistance = fNewValue;
-		this->isGeometryRebuildNeeded  = true;
 		};
 		break;
 
-		case FFPARAM_VALUE6_PCOUNT:
-		if (this->fPlanesCount != fNewValue)
-		{
-		this->fPlanesCount = fNewValue;
-		this->iPlanesCount = (float)MaxPlanes * this->fPlanesCount;
-		if (this->iPlanesCount == 0)
-		this->iPlanesCount = 1;
-		this->isGeometryRebuildNeeded = true;
-		};
-		break;
 
-		case FFPARAM_VALUE7_FOVY:
-		this->fAngle = fNewValue;
-		break;
-		*/
+
+			/*
+			case FFPARAM_VALUE3_RX:
+			this->fXAngle = fNewValue;
+			break;
+
+			case FFPARAM_VALUE4_RY:
+			this->fYAngle = fNewValue;
+			break;
+
+			case FFPARAM_VALUE5_DISTANCE:
+			if (this->fDistance != fNewValue)
+			{
+			this->fDistance = fNewValue;
+			this->isGeometryRebuildNeeded  = true;
+			};
+			break;
+
+			case FFPARAM_VALUE6_PCOUNT:
+			if (this->fPlanesCount != fNewValue)
+			{
+			this->fPlanesCount = fNewValue;
+			this->iPlanesCount = (float)MaxPlanes * this->fPlanesCount;
+			if (this->iPlanesCount == 0)
+			this->iPlanesCount = 1;
+			this->isGeometryRebuildNeeded = true;
+			};
+			break;
+
+			case FFPARAM_VALUE7_FOVY:
+			this->fAngle = fNewValue;
+			break;
+			*/
 		default:
 			return FF_FAIL;
+		}
+
+		if (isFieldChanged)
+		{
+			CreateFieldTexture(800, 600, 0);
+			isFieldChanged = false;
 		}
 
 		return FF_SUCCESS;
