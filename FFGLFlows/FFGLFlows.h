@@ -5,6 +5,7 @@
 #include "../FFGL Lib/FFGLShader.h"
 #include "../FFGL Lib/FFGLPluginSDK.h"
 
+#define STRINGIFY( expr ) std::string(#expr)
 
 class FFGLFlows : public CFreeFrameGLPlugin
 {
@@ -74,6 +75,7 @@ private:
 	float xFactor = 0.1;
 	float yFactor = 0.1;
 	float velocity = 0.6;
+	float velocityScale = 0.6;
 	float xShift = 0.0;
 	float yShift = 0.0;
 

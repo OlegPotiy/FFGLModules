@@ -3,6 +3,7 @@
 #include "FFGLFlows.h"
 #include <gl\GLU.h>
 #include <math.h>
+#include <string>
 #define USE_VBO
 
 // Parameters
@@ -12,9 +13,10 @@
 #define FFPARAM_VALUE4_NOISE_TEXTURES_DIMENSION	(3)
 #define FFPARAM_VALUE5_XFACTOR	(4)
 #define FFPARAM_VALUE6_YFACTOR	(5)
-#define FFPARAM_VALUE7_VELOCITY	(6)
-#define FFPARAM_VALUE8_XSHIFT	(7)
-#define FFPARAM_VALUE9_YSHIFT	(8)
+#define FFPARAM_VALUE_VELOCITY	(6)
+#define FFPARAM_VALUE_VELOCITY_SCALE (7)
+#define FFPARAM_VALUE_XSHIFT	(8)
+#define FFPARAM_VALUE_YSHIFT	(9)
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -54,44 +56,97 @@ FFGLFlows::FFGLFlows() :CFreeFrameGLPlugin()
 
 	SetParamInfo(FFPARAM_VALUE5_XFACTOR, "X Factor", FF_TYPE_STANDARD, this->xFactor);
 	SetParamInfo(FFPARAM_VALUE6_YFACTOR, "Y Factor", FF_TYPE_STANDARD, this->yFactor);
-	SetParamInfo(FFPARAM_VALUE7_VELOCITY, "Velosity", FF_TYPE_STANDARD, this->velocity);
-	SetParamInfo(FFPARAM_VALUE8_XSHIFT, "X Shift", FF_TYPE_STANDARD, this->xShift);
-	SetParamInfo(FFPARAM_VALUE9_YSHIFT, "Y Shift", FF_TYPE_STANDARD, this->yShift);
+	
+	SetParamInfo(FFPARAM_VALUE_VELOCITY, "Velosity", FF_TYPE_STANDARD, this->velocity);
+	SetParamInfo(FFPARAM_VALUE_VELOCITY_SCALE, "Velosity Scale", FF_TYPE_STANDARD, this->velocityScale);
+	
+	SetParamInfo(FFPARAM_VALUE_XSHIFT, "X Shift", FF_TYPE_STANDARD, this->xShift);
+	SetParamInfo(FFPARAM_VALUE_YSHIFT, "Y Shift", FF_TYPE_STANDARD, this->yShift);
 }
 
 FFGLFlows::~FFGLFlows()
 {
 }
 
+static const std::string vertexShaderCode = STRINGIFY(
+void main()
+{
+  gl_Position = gl_ModelViewProjectionMatrix * gl_Vertex;
+  gl_TexCoord[0] = gl_MultiTexCoord0;
+  gl_TexCoord[1] = gl_MultiTexCoord1;
+  gl_TexCoord[2] = gl_MultiTexCoord2;
+  gl_FrontColor = gl_Color;
+});
 
-char *vertexShaderCode =
-"void main()"
-"{"
-"  gl_Position = gl_ModelViewProjectionMatrix * gl_Vertex;"
-"  gl_TexCoord[0] = gl_MultiTexCoord0;"
-"  gl_TexCoord[1] = gl_MultiTexCoord1;"
-"  gl_TexCoord[2] = gl_MultiTexCoord2;"
-"  gl_FrontColor = gl_Color;"
-"}";
+
+static const std::string fragmentShaderCode = STRINGIFY(
+uniform sampler2D texture0;
+uniform sampler2D texture1;
+uniform sampler2D texture2;
+uniform float alpha;
+uniform float velocity;
+uniform float velocityScale;
+uniform float dx;
+uniform float dy;
 
 
-char *fragmentShaderCode =
-"uniform sampler2D texture0;"
-"uniform sampler2D texture1;"
-"uniform sampler2D texture2;"
-"uniform float alpha;"
-"uniform float velocity;"
-"void main() "
-"{"
-//"	vec4 field = velocity * texture2D(texture2, gl_TexCoord[2]);"
-"   vec2 texCoord = gl_TexCoord[0].xy;"
-"	vec2 coords = vec2(-1.0,-1.0) + 2.0 * texCoord;"
-"	vec2 field = velocity * vec2(coords.y,coords.x);"
-"	vec2 samplerCoord = texCoord - field;"
-"	vec4 srcColor = texture2D(texture0, samplerCoord);"
-"	vec4 noiseColor = texture2D(texture1, vec2(texCoord.s, texCoord.t));"
-"	gl_FragColor = (1-alpha) * srcColor + alpha * noiseColor;"
-"}";
+float getWeight(vec4 cVal)
+{
+	return cVal.r + cVal.g + cVal.b + cVal.a;
+}
+
+vec2  getDirectField()
+{
+	vec2 field = vec2(0.0);
+	vec4 texValue = texture2D(texture2, gl_TexCoord[2]);
+	field =  texValue.xy - vec2(0.5);
+	return field * texValue.z;
+}
+
+vec2 getSobel()
+{
+	bool isInsideOfArea = false;
+	vec4 gradient = vec4(0.0);
+	vec2 texCoords = gl_TexCoord[2].st;
+
+	vec4 z1 = getWeight(texture2D(texture2, vec2(texCoords.x - dx, texCoords.y + dy)));
+	vec4 z2 = getWeight(texture2D(texture2, vec2(texCoords.x, texCoords.y + dy)));
+	vec4 z3 = getWeight(texture2D(texture2, vec2(texCoords.x + dx, texCoords.y + dy)));
+	vec4 z4 = getWeight(texture2D(texture2, vec2(texCoords.x - dx, texCoords.y)));
+
+	vec4 z6 = getWeight(texture2D(texture2, vec2(texCoords.x + dx, texCoords.y)));
+	vec4 z7 = getWeight(texture2D(texture2, vec2(texCoords.x - dx, texCoords.y - dy)));
+	vec4 z8 = getWeight(texture2D(texture2, vec2(texCoords.x, texCoords.y - dy)));
+	vec4 z9 = getWeight(texture2D(texture2, vec2(texCoords.x + dx, texCoords.y - dy)));
+
+	gradient.y = (z7 + 2*z8 + z9) - (z1 + 2*z2 + z3);
+	gradient.x = -(z3 + 2*z6 + z9) + (z1 + 2*z4 + z7);
+
+	isInsideOfArea = (z1 == z2) && (z2 == z3) && (z3 == z4) && (z4 == z6) && (z6 == z7) && (z7 == z8) && (z8 == z9);
+	if (!isInsideOfArea) {
+		return gradient.xy;
+	} else {
+		return vec2(0.5) - texCoords;
+	}
+}
+
+void main()
+{
+   vec2 texCoord = gl_TexCoord[0].st;
+	vec2 coords = vec2(-1.0,-1.0) + 2.0 * texCoord;
+
+
+//"	vec2 field = velocity * texture2D(texture2, gl_TexCoord[2]);"
+
+//"	vec2 field = velocity * getSobel(gl_TexCoord[2]);"
+
+	vec2 field = velocityScale * (velocity - 0.5) * getDirectField();
+
+	vec2 samplerCoord = texCoord - field;
+	vec4 srcColor = texture2D(texture0, samplerCoord);
+	vec4 noiseColor = texture2D(texture1, vec2(texCoord.s, texCoord.t));
+	gl_FragColor = (1-alpha) * srcColor + alpha * noiseColor;
+});
 
 
 
@@ -109,7 +164,7 @@ DWORD FFGLFlows::InitGL(const FFGLViewportStruct *vp)
 
 	const GLubyte * glslInfo = glGetString(GL_SHADING_LANGUAGE_VERSION);
 
-	int isCompiled = m_shader.Compile(vertexShaderCode, fragmentShaderCode);
+	int isCompiled = m_shader.Compile(vertexShaderCode.c_str(), fragmentShaderCode.c_str());
 
 	if (isCompiled != 1)
 		return FF_FAIL;
@@ -152,6 +207,8 @@ DWORD FFGLFlows::InitGL(const FFGLViewportStruct *vp)
 
 	m_inputTextureLocation = m_shader.FindUniform("texture2");
 	m_extensions.glUniform1iARB(m_inputTextureLocation, 2);
+	
+
 	
 
 
@@ -241,15 +298,22 @@ DWORD FFGLFlows::ProcessOpenGL(ProcessOpenGLStruct *pGL)
 	glClear(GL_COLOR_BUFFER_BIT);
 	m_shader.BindShader();
 
+	
+	GLuint paramId = m_shader.FindUniform("dx");
+	m_extensions.glUniform1fARB(paramId, 1.0 / (float)Texture.Width);
 
-	GLuint paramId = m_shader.FindUniform("alpha");
+	paramId = m_shader.FindUniform("dy");
+	m_extensions.glUniform1fARB(paramId, 1.0 / (float)Texture.Height);
+
+	paramId = m_shader.FindUniform("alpha");
 	m_extensions.glUniform1fARB(paramId, alphaNoisesTexture);
 
 	paramId = m_shader.FindUniform("velocity");
 	m_extensions.glUniform1fARB(paramId, this->velocity );
 
-
-
+	paramId = m_shader.FindUniform("velocityScale");
+	m_extensions.glUniform1fARB(paramId, this->velocityScale);
+	
 	m_extensions.glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, srcTexture);
 
@@ -257,7 +321,7 @@ DWORD FFGLFlows::ProcessOpenGL(ProcessOpenGLStruct *pGL)
 	glBindTexture(GL_TEXTURE_2D, this->noiseTexturesIds[iCounter]);
 
 	m_extensions.glActiveTexture(GL_TEXTURE2);
-	glBindTexture(GL_TEXTURE_2D, this->fieldTextureId);
+	glBindTexture(GL_TEXTURE_2D, Texture.Handle);
 
 	glBegin(GL_QUADS);
 
@@ -687,15 +751,19 @@ DWORD FFGLFlows::GetParameter(DWORD dwIndex)
 		*((float *)(unsigned)(&dwRet)) = this->yFactor;
 		return dwRet;
 
-	case FFPARAM_VALUE7_VELOCITY:
+	case FFPARAM_VALUE_VELOCITY:
 		*((float *)(unsigned)(&dwRet)) = this->velocity;
 		return dwRet;
 
-	case FFPARAM_VALUE8_XSHIFT:
+	case FFPARAM_VALUE_VELOCITY_SCALE:
+		*((float *)(unsigned)(&dwRet)) = this->velocityScale;
+		return dwRet;
+
+	case FFPARAM_VALUE_XSHIFT:
 		*((float *)(unsigned)(&dwRet)) = this->xShift;
 		return dwRet;
 
-	case FFPARAM_VALUE9_YSHIFT:
+	case FFPARAM_VALUE_YSHIFT:
 		*((float *)(unsigned)(&dwRet)) = this->yShift;
 		return dwRet;
 
@@ -806,20 +874,26 @@ DWORD FFGLFlows::SetParameter(const SetParameterStruct* pParam)
 		};
 		break;
 
-		case FFPARAM_VALUE7_VELOCITY:
+		case FFPARAM_VALUE_VELOCITY:
 		{
 			this->velocity = fNewValue;
 		};
 		break;
 
-		case FFPARAM_VALUE8_XSHIFT:
+		case FFPARAM_VALUE_VELOCITY_SCALE:
+		{
+			this->velocityScale  = fNewValue;
+		};
+		break;
+
+		case FFPARAM_VALUE_XSHIFT:
 		{
 			isFieldChanged = (this->xShift != fNewValue);
 			this->xShift = fNewValue;
 		};
 		break;
 
-		case FFPARAM_VALUE9_YSHIFT:
+		case FFPARAM_VALUE_YSHIFT:
 		{
 			isFieldChanged = (this->yShift != fNewValue);
 			this->yShift = fNewValue;
