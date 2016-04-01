@@ -4,4 +4,7 @@
     <LocalDebuggerCommand>C:\Program Files %28x86%29\Resolume Arena 4.1.6\Arena.exe</LocalDebuggerCommand>
     <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
   </PropertyGroup>
+  <PropertyGroup>
+    <ShowAllFiles>true</ShowAllFiles>
+  </PropertyGroup>
 </Project>

@@ -1,2 +1,3 @@
 Debug
-*.suo
+/FFGLModules.VC.db
+/FFGLModules.VC.VC.opendb

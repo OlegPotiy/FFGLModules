@@ -36,4 +36,4 @@ struct GLQuad
 	}
 };
 
-
+#define STRINGIFY( expr ) std::string(#expr)
