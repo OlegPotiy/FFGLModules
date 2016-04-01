@@ -57,30 +57,30 @@ private:
 	} *fbos;
 
 
+
+public:
 	FBOPair* CreateFBO(const FFGLViewportStruct *vp);
 
-	void CreateTextures(int width, int height, int texNum);
-	void CreateFieldTexture(int width, int height, float param);
-
-
+private:
+	
 	FFGLExtensions m_extensions;
 	FFGLShader m_shader;
 
-	struct GLVertexTriplet { GLfloat x, y, z; };
-	struct GLTexcoords { GLfloat s, t; };
 
-	GLfloat alphaNoisesTexture = 0.5;
-	GLfloat alphaImageTexture = 0.5;
+	GLfloat alphaNoisesTexture = 0.5f;
+	GLfloat alphaImageTexture = 0.5f;
 
-	float xFactor = 0.1;
-	float yFactor = 0.1;
-	float velocity = 0.6;
-	float velocityScale = 0.6;
-	float xShift = 0.0;
-	float yShift = 0.0;
+	float xFactor = 0.1f;
+	float yFactor = 0.1f;
+	float velocity = 0.6f;
+	float velocityScale = 0.6f;
+	float xShift = 0.0f;
+	float yShift = 0.0f;
+	float noiseDimScale = 0.5f;
 
-	int noiseTexturesDimension = 256;
-	const int maxNoiseTexturesDimension = 1024;
+
+	GLuint maxHorisontalNoiseDim;
+	GLuint maxVerticalNoiseDim;
 
 	int noiseTexturesAmount = 32;
 	const int maxNoiseTexturesAmount = 256;
@@ -98,10 +98,14 @@ private:
 	GLuint frameBufferId;
 	GLuint renderedTexture;
 
-	GLint m_inputTextureLocation;
-	GLint m_heatTextureLocation;
-	GLint m_maxCoordsLocation;
-	GLint m_heatAmountLocation;
+
+	
+	
+
+
+	void CreateTextures(int width, int height, int texNum);
+	void CreateFieldTexture(int width, int height, float param);
+
 
 };
 
