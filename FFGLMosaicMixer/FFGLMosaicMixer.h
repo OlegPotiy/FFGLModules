@@ -2,8 +2,8 @@
 #define FFGLBRIGHTNESS_H
 
 
-#include "../FFGL Lib/FFGLShader.h"
-#include "../FFGL Lib/FFGLPluginSDK.h"
+#include "../FFGL/FFGLShader.h"
+#include "../FFGL/FFGLPluginSDK.h"
 #include "GLCommons.h"
 #include "GLQuadNode.h"
 

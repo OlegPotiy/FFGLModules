@@ -11,32 +11,32 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\FFGL Lib\FFGL.h" />
-    <ClInclude Include="..\FFGL Lib\FFGLExtensions.h" />
-    <ClInclude Include="..\FFGL Lib\FFGLFBO.h" />
-    <ClInclude Include="..\FFGL Lib\FFGLLib.h" />
-    <ClInclude Include="..\FFGL Lib\FFGLPluginInfo.h" />
-    <ClInclude Include="..\FFGL Lib\FFGLPluginManager.h" />
-    <ClInclude Include="..\FFGL Lib\FFGLPluginManager_inl.h" />
-    <ClInclude Include="..\FFGL Lib\FFGLPluginSDK.h" />
-    <ClInclude Include="..\FFGL Lib\FFGLShader.h" />
-    <ClInclude Include="..\FFGL Lib\FreeFrame.h" />
-    <ClInclude Include="FFGLFlows.h" />
+    <ClInclude Include="..\FFGL\FFGL.h" />
+    <ClInclude Include="..\FFGL\FFGLExtensions.h" />
+    <ClInclude Include="..\FFGL\FFGLFBO.h" />
+    <ClInclude Include="..\FFGL\FFGLLib.h" />
+    <ClInclude Include="..\FFGL\FFGLPluginInfo.h" />
+    <ClInclude Include="..\FFGL\FFGLPluginManager.h" />
+    <ClInclude Include="..\FFGL\FFGLPluginManager_inl.h" />
+    <ClInclude Include="..\FFGL\FFGLPluginSDK.h" />
+    <ClInclude Include="..\FFGL\FFGLShader.h" />
+    <ClInclude Include="..\FFGL\FreeFrame.h" />
+    <ClInclude Include="src\FFGLFlows.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\FFGL Lib\FFGL.cpp" />
-    <ClCompile Include="..\FFGL Lib\FFGLExtensions.cpp" />
-    <ClCompile Include="..\FFGL Lib\FFGLFBO.cpp" />
-    <ClCompile Include="..\FFGL Lib\FFGLPluginInfo.cpp" />
-    <ClCompile Include="..\FFGL Lib\FFGLPluginInfoData.cpp" />
-    <ClCompile Include="..\FFGL Lib\FFGLPluginManager.cpp" />
-    <ClCompile Include="..\FFGL Lib\FFGLPluginSDK.cpp" />
-    <ClCompile Include="..\FFGL Lib\FFGLShader.cpp" />
-    <ClCompile Include="FFGLFlows.cpp" />
+    <ClCompile Include="..\FFGL\FFGL.cpp" />
+    <ClCompile Include="..\FFGL\FFGLExtensions.cpp" />
+    <ClCompile Include="..\FFGL\FFGLFBO.cpp" />
+    <ClCompile Include="..\FFGL\FFGLPluginInfo.cpp" />
+    <ClCompile Include="..\FFGL\FFGLPluginInfoData.cpp" />
+    <ClCompile Include="..\FFGL\FFGLPluginManager.cpp" />
+    <ClCompile Include="..\FFGL\FFGLPluginSDK.cpp" />
+    <ClCompile Include="..\FFGL\FFGLShader.cpp" />
+    <ClCompile Include="src\FFGLFlows.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{74AE03F6-083C-4146-9251-0DAAF88A799D}</ProjectGuid>
-    <RootNamespace>FFGLVolRen</RootNamespace>
+    <RootNamespace>FFGLFlows</RootNamespace>
     <ProjectName>FFGLFlows</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
@@ -68,7 +68,7 @@
     <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</LinkIncremental>
     <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(SolutionDir)$(Configuration)\</OutDir>
     <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(Configuration)\</IntDir>
-    <CodeAnalysisRuleSet Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">AllRules.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRuleSet Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
     <CodeAnalysisRules Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" />
     <CodeAnalysisRuleAssemblies Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" />
     <CodeAnalysisRuleSet Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">AllRules.ruleset</CodeAnalysisRuleSet>
@@ -78,7 +78,7 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_USRDLL;FFGLTILE_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_WINDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MinimalRebuild>true</MinimalRebuild>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>

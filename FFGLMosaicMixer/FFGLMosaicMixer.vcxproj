@@ -67,29 +67,29 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="..\FFGL Lib\FFGL.h" />
-    <ClInclude Include="..\FFGL Lib\FFGLExtensions.h" />
-    <ClInclude Include="..\FFGL Lib\FFGLFBO.h" />
-    <ClInclude Include="..\FFGL Lib\FFGLLib.h" />
-    <ClInclude Include="..\FFGL Lib\FFGLPluginInfo.h" />
-    <ClInclude Include="..\FFGL Lib\FFGLPluginManager.h" />
-    <ClInclude Include="..\FFGL Lib\FFGLPluginManager_inl.h" />
-    <ClInclude Include="..\FFGL Lib\FFGLPluginSDK.h" />
-    <ClInclude Include="..\FFGL Lib\FFGLShader.h" />
-    <ClInclude Include="..\FFGL Lib\FreeFrame.h" />
+    <ClInclude Include="..\FFGL\FFGL.h" />
+    <ClInclude Include="..\FFGL\FFGLExtensions.h" />
+    <ClInclude Include="..\FFGL\FFGLFBO.h" />
+    <ClInclude Include="..\FFGL\FFGLLib.h" />
+    <ClInclude Include="..\FFGL\FFGLPluginInfo.h" />
+    <ClInclude Include="..\FFGL\FFGLPluginManager.h" />
+    <ClInclude Include="..\FFGL\FFGLPluginManager_inl.h" />
+    <ClInclude Include="..\FFGL\FFGLPluginSDK.h" />
+    <ClInclude Include="..\FFGL\FFGLShader.h" />
+    <ClInclude Include="..\FFGL\FreeFrame.h" />
     <ClInclude Include="FFGLMosaicMixer.h" />
     <ClInclude Include="GLCommons.h" />
     <ClInclude Include="GLQuadNode.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\FFGL Lib\FFGL.cpp" />
-    <ClCompile Include="..\FFGL Lib\FFGLExtensions.cpp" />
-    <ClCompile Include="..\FFGL Lib\FFGLFBO.cpp" />
-    <ClCompile Include="..\FFGL Lib\FFGLPluginInfo.cpp" />
-    <ClCompile Include="..\FFGL Lib\FFGLPluginInfoData.cpp" />
-    <ClCompile Include="..\FFGL Lib\FFGLPluginManager.cpp" />
-    <ClCompile Include="..\FFGL Lib\FFGLPluginSDK.cpp" />
-    <ClCompile Include="..\FFGL Lib\FFGLShader.cpp" />
+    <ClCompile Include="..\FFGL\FFGL.cpp" />
+    <ClCompile Include="..\FFGL\FFGLExtensions.cpp" />
+    <ClCompile Include="..\FFGL\FFGLFBO.cpp" />
+    <ClCompile Include="..\FFGL\FFGLPluginInfo.cpp" />
+    <ClCompile Include="..\FFGL\FFGLPluginInfoData.cpp" />
+    <ClCompile Include="..\FFGL\FFGLPluginManager.cpp" />
+    <ClCompile Include="..\FFGL\FFGLPluginSDK.cpp" />
+    <ClCompile Include="..\FFGL\FFGLShader.cpp" />
     <ClCompile Include="FFGLMosaicMixer.cpp" />
     <ClCompile Include="GLQuadNode.cpp" />
   </ItemGroup>

@@ -1,9 +1,4 @@
-#include "../FFGL Lib/FFGL.h"
-#include "../FFGL Lib/FFGLLib.h"
 #include "FFGLMosaicMixer.h"
-#include <gl\GLU.h>
-#include <math.h>
-#include "GLCommons.h"
 
 // Parameters
 #define	FFPARAM_Blend		(0)

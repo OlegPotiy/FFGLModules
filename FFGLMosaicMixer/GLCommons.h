@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../FFGL Lib/FFGLPluginSDK.h"
+#include "../FFGL/FFGLPluginSDK.h"
 
 struct GLVertex	
 { 
@@ -36,4 +36,3 @@ struct GLQuad
 	}
 };
 
-#define STRINGIFY( expr ) std::string(#expr)
