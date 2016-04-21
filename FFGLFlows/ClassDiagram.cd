@@ -1,0 +1,984 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="FFGLExtensions" Collapsed="true">
+    <Position X="16.75" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>sYVI4IkaghASAfAAKNIwCEzAEgSASAFCkQBySwHg/n8=</HashCode>
+      <FileName>C:\Users\potiyo\Documents\GitHub\FFGLModules\FFGL\FFGLExtensions.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="FFGLFBO" Collapsed="true">
+    <Position X="18.5" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>GAAIAAIAABAAIABBgAAAAYBAAAAAgECAAAAAIEAAAAI=</HashCode>
+      <FileName>C:\Users\potiyo\Documents\GitHub\FFGLModules\FFGL\FFGLFBO.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CFFGLPluginInfo" Collapsed="true">
+    <Position X="15" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>BAAAQAAAAAAAAFAAAAAAAAAgAAAAAAAEAAABABAAAAA=</HashCode>
+      <FileName>C:\Users\potiyo\Documents\GitHub\FFGLModules\FFGL\FFGLPluginInfo.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CFFGLPluginManager" Collapsed="true">
+    <Position X="0.5" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>YAAAAEJAAAAFAIAAAAgAAAAARAIAAAAEAACAIAQAgEA=</HashCode>
+      <FileName>C:\Users\potiyo\Documents\GitHub\FFGLModules\FFGL\FFGLPluginManager.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CFreeFrameGLPlugin" Collapsed="true">
+    <Position X="0.5" Y="2.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>QBAQAAAAAAIACAAAAAAAAAIAAAABABAAEAAAEEAAAAA=</HashCode>
+      <FileName>C:\Users\potiyo\Documents\GitHub\FFGLModules\FFGL\FFGLPluginSDK.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="FFGLShader" Collapsed="true">
+    <Position X="20.25" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>QQAAAAAAQAAAhgIAAAACAQAAAAAAAEEACAAAAAgAgEA=</HashCode>
+      <FileName>C:\Users\potiyo\Documents\GitHub\FFGLModules\FFGL\FFGLShader.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="FFGLFlows" Collapsed="true">
+    <Position X="0.5" Y="4.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>gEQQDFAgAAB0CAAEBAEAQCIAACADQDEIAAQIRglAEAE=</HashCode>
+      <FileName>src\FFGLFlows.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Struct Name="FFGLViewportStructTag" Collapsed="true">
+    <Position X="1.5" Y="13.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAQAQAAAAAAAAAAAAAAAAABgAAAAAAA=</HashCode>
+      <FileName>C:\Users\potiyo\Documents\GitHub\FFGLModules\FFGL\FFGL.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="FFGLTextureStructTag" Collapsed="true">
+    <Position X="12.5" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAgBAAAAAAAAAAAAEAQAAAAAAIAAAAAAAAAAAA=</HashCode>
+      <FileName>C:\Users\potiyo\Documents\GitHub\FFGLModules\FFGL\FFGL.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="ProcessOpenGLStructTag" Collapsed="true">
+    <Position X="9.5" Y="10.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAEAAAAAAAAAAAAAAAAAAAQAAAAAAAIAAAAAA=</HashCode>
+      <FileName>C:\Users\potiyo\Documents\GitHub\FFGLModules\FFGL\FFGL.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="FFGLTexCoordsTag" Collapsed="true">
+    <Position X="5.5" Y="10.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIQAAAAAAAA=</HashCode>
+      <FileName>C:\Users\potiyo\Documents\GitHub\FFGLModules\FFGL\FFGLLib.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="PluginInfoStructTag" Collapsed="true">
+    <Position X="1.5" Y="10.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAEAAAAAAAgAAAAAAAAGAAAAEAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>C:\Users\potiyo\Documents\GitHub\FFGLModules\FFGL\FreeFrame.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="PluginExtendedInfoStructTag" Collapsed="true">
+    <Position X="8.5" Y="5.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAABAAAAAAkAAkAAAAAAAAAAAAAAAAAAAAAAAAAEAA=</HashCode>
+      <FileName>C:\Users\potiyo\Documents\GitHub\FFGLModules\FFGL\FreeFrame.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="VideoInfoStructTag" Collapsed="true">
+    <Position X="8.5" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAQAAAAAAEAAAAABAACAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>C:\Users\potiyo\Documents\GitHub\FFGLModules\FFGL\FreeFrame.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="ProcessFrameCopyStructTag" Collapsed="true">
+    <Position X="4.5" Y="5.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AACAAAABAAAAAAAACAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>C:\Users\potiyo\Documents\GitHub\FFGLModules\FFGL\FreeFrame.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="SetParameterStructTag" Collapsed="true">
+    <Position X="4.5" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAE=</HashCode>
+      <FileName>C:\Users\potiyo\Documents\GitHub\FFGLModules\FFGL\FreeFrame.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="ParamDefinition" Collapsed="true">
+    <Position X="15" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAQAAAAAAAAQAAAAAACAAAAAAAA=</HashCode>
+      <FileName>src\FFGLFlows.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Typedef Name="FFGLViewportStruct" Collapsed="true">
+    <Position X="1.5" Y="15.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>C:\Users\potiyo\Documents\GitHub\FFGLModules\FFGL\FFGL.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="FFGLTextureStruct" Collapsed="true">
+    <Position X="12.5" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>C:\Users\potiyo\Documents\GitHub\FFGLModules\FFGL\FFGL.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="ProcessOpenGLStruct" Collapsed="true">
+    <Position X="9.5" Y="12.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>C:\Users\potiyo\Documents\GitHub\FFGLModules\FFGL\FFGL.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="GLintptrARB" Collapsed="true">
+    <Position X="18.5" Y="7" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>C:\Users\potiyo\Documents\GitHub\FFGLModules\FFGL\FFGLExtensions.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="GLsizeiptrARB" Collapsed="true">
+    <Position X="30.75" Y="9.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>C:\Users\potiyo\Documents\GitHub\FFGLModules\FFGL\FFGLExtensions.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="glActiveTexturePROC" Collapsed="true">
+    <Position X="22" Y="4" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>C:\Users\potiyo\Documents\GitHub\FFGLModules\FFGL\FFGLExtensions.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="glClientActiveTexturePROC" Collapsed="true">
+    <Position X="18.5" Y="4.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>C:\Users\potiyo\Documents\GitHub\FFGLModules\FFGL\FFGLExtensions.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="glMultiTexCoord1dPROC" Collapsed="true">
+    <Position X="29" Y="7" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>C:\Users\potiyo\Documents\GitHub\FFGLModules\FFGL\FFGLExtensions.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="glMultiTexCoord1dvPROC" Collapsed="true">
+    <Position X="30.75" Y="7" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>C:\Users\potiyo\Documents\GitHub\FFGLModules\FFGL\FFGLExtensions.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="glMultiTexCoord1fPROC" Collapsed="true">
+    <Position X="32.5" Y="7" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>C:\Users\potiyo\Documents\GitHub\FFGLModules\FFGL\FFGLExtensions.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="glMultiTexCoord1fvPROC" Collapsed="true">
+    <Position X="15" Y="7.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>C:\Users\potiyo\Documents\GitHub\FFGLModules\FFGL\FFGLExtensions.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="glMultiTexCoord1iPROC" Collapsed="true">
+    <Position X="16.75" Y="7.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>C:\Users\potiyo\Documents\GitHub\FFGLModules\FFGL\FFGLExtensions.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="glMultiTexCoord1ivPROC" Collapsed="true">
+    <Position X="18.5" Y="7.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>C:\Users\potiyo\Documents\GitHub\FFGLModules\FFGL\FFGLExtensions.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="glMultiTexCoord1sPROC" Collapsed="true">
+    <Position X="20.25" Y="7.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>C:\Users\potiyo\Documents\GitHub\FFGLModules\FFGL\FFGLExtensions.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="glMultiTexCoord1svPROC" Collapsed="true">
+    <Position X="22" Y="7.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>C:\Users\potiyo\Documents\GitHub\FFGLModules\FFGL\FFGLExtensions.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="glMultiTexCoord2dPROC" Collapsed="true">
+    <Position X="23.75" Y="7.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>C:\Users\potiyo\Documents\GitHub\FFGLModules\FFGL\FFGLExtensions.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="glMultiTexCoord2dvPROC" Collapsed="true">
+    <Position X="25.5" Y="7.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>C:\Users\potiyo\Documents\GitHub\FFGLModules\FFGL\FFGLExtensions.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="glMultiTexCoord2fPROC" Collapsed="true">
+    <Position X="27.25" Y="7.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>C:\Users\potiyo\Documents\GitHub\FFGLModules\FFGL\FFGLExtensions.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="glMultiTexCoord2fvPROC" Collapsed="true">
+    <Position X="29" Y="7.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>C:\Users\potiyo\Documents\GitHub\FFGLModules\FFGL\FFGLExtensions.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="glMultiTexCoord2iPROC" Collapsed="true">
+    <Position X="30.75" Y="7.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>C:\Users\potiyo\Documents\GitHub\FFGLModules\FFGL\FFGLExtensions.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="glMultiTexCoord2ivPROC" Collapsed="true">
+    <Position X="32.5" Y="7.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>C:\Users\potiyo\Documents\GitHub\FFGLModules\FFGL\FFGLExtensions.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="glMultiTexCoord2sPROC" Collapsed="true">
+    <Position X="15" Y="8.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>C:\Users\potiyo\Documents\GitHub\FFGLModules\FFGL\FFGLExtensions.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="glMultiTexCoord2svPROC" Collapsed="true">
+    <Position X="16.75" Y="8.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>C:\Users\potiyo\Documents\GitHub\FFGLModules\FFGL\FFGLExtensions.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="glMultiTexCoord3dPROC" Collapsed="true">
+    <Position X="18.5" Y="8.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>C:\Users\potiyo\Documents\GitHub\FFGLModules\FFGL\FFGLExtensions.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="glMultiTexCoord3dvPROC" Collapsed="true">
+    <Position X="20.25" Y="8.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>C:\Users\potiyo\Documents\GitHub\FFGLModules\FFGL\FFGLExtensions.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="glMultiTexCoord3fPROC" Collapsed="true">
+    <Position X="22" Y="8.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>C:\Users\potiyo\Documents\GitHub\FFGLModules\FFGL\FFGLExtensions.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="glMultiTexCoord3fvPROC" Collapsed="true">
+    <Position X="23.75" Y="8.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>C:\Users\potiyo\Documents\GitHub\FFGLModules\FFGL\FFGLExtensions.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="glMultiTexCoord3iPROC" Collapsed="true">
+    <Position X="25.5" Y="8.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>C:\Users\potiyo\Documents\GitHub\FFGLModules\FFGL\FFGLExtensions.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="glMultiTexCoord3ivPROC" Collapsed="true">
+    <Position X="27.25" Y="8.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>C:\Users\potiyo\Documents\GitHub\FFGLModules\FFGL\FFGLExtensions.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="glMultiTexCoord3sPROC" Collapsed="true">
+    <Position X="29" Y="8.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>C:\Users\potiyo\Documents\GitHub\FFGLModules\FFGL\FFGLExtensions.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="glMultiTexCoord3svPROC" Collapsed="true">
+    <Position X="30.75" Y="8.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>C:\Users\potiyo\Documents\GitHub\FFGLModules\FFGL\FFGLExtensions.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="glMultiTexCoord4dPROC" Collapsed="true">
+    <Position X="32.5" Y="8.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>C:\Users\potiyo\Documents\GitHub\FFGLModules\FFGL\FFGLExtensions.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="glMultiTexCoord4dvPROC" Collapsed="true">
+    <Position X="15" Y="9.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>C:\Users\potiyo\Documents\GitHub\FFGLModules\FFGL\FFGLExtensions.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="glMultiTexCoord4fPROC" Collapsed="true">
+    <Position X="16.75" Y="9.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>C:\Users\potiyo\Documents\GitHub\FFGLModules\FFGL\FFGLExtensions.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="glMultiTexCoord4fvPROC" Collapsed="true">
+    <Position X="18.5" Y="9.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>C:\Users\potiyo\Documents\GitHub\FFGLModules\FFGL\FFGLExtensions.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="glMultiTexCoord4iPROC" Collapsed="true">
+    <Position X="20.25" Y="9.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>C:\Users\potiyo\Documents\GitHub\FFGLModules\FFGL\FFGLExtensions.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="glMultiTexCoord4ivPROC" Collapsed="true">
+    <Position X="22" Y="9.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>C:\Users\potiyo\Documents\GitHub\FFGLModules\FFGL\FFGLExtensions.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="glMultiTexCoord4sPROC" Collapsed="true">
+    <Position X="23.75" Y="9.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>C:\Users\potiyo\Documents\GitHub\FFGLModules\FFGL\FFGLExtensions.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="glMultiTexCoord4svPROC" Collapsed="true">
+    <Position X="25.5" Y="9.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>C:\Users\potiyo\Documents\GitHub\FFGLModules\FFGL\FFGLExtensions.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="glBindFramebufferEXTPROC" Collapsed="true">
+    <Position X="27.25" Y="4" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>C:\Users\potiyo\Documents\GitHub\FFGLModules\FFGL\FFGLExtensions.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="glBindRenderbufferEXTPROC" Collapsed="true">
+    <Position X="29" Y="4" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>C:\Users\potiyo\Documents\GitHub\FFGLModules\FFGL\FFGLExtensions.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="glCheckFramebufferStatusEXTPROC" Collapsed="true">
+    <Position X="16.75" Y="4.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>C:\Users\potiyo\Documents\GitHub\FFGLModules\FFGL\FFGLExtensions.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="glDeleteFramebuffersEXTPROC" Collapsed="true">
+    <Position X="27.25" Y="4.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>C:\Users\potiyo\Documents\GitHub\FFGLModules\FFGL\FFGLExtensions.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="glDeleteRenderBuffersEXTPROC" Collapsed="true">
+    <Position X="30.75" Y="4.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>C:\Users\potiyo\Documents\GitHub\FFGLModules\FFGL\FFGLExtensions.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="glFramebufferRenderbufferEXTPROC" Collapsed="true">
+    <Position X="15" Y="5.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>C:\Users\potiyo\Documents\GitHub\FFGLModules\FFGL\FFGLExtensions.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="glFramebufferTexture1DEXTPROC" Collapsed="true">
+    <Position X="16.75" Y="5.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>C:\Users\potiyo\Documents\GitHub\FFGLModules\FFGL\FFGLExtensions.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="glFramebufferTexture2DEXTPROC" Collapsed="true">
+    <Position X="18.5" Y="5.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>C:\Users\potiyo\Documents\GitHub\FFGLModules\FFGL\FFGLExtensions.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="glFramebufferTexture3DEXTPROC" Collapsed="true">
+    <Position X="20.25" Y="5.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>C:\Users\potiyo\Documents\GitHub\FFGLModules\FFGL\FFGLExtensions.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="glGenFramebuffersEXTPROC" Collapsed="true">
+    <Position X="25.5" Y="5.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>C:\Users\potiyo\Documents\GitHub\FFGLModules\FFGL\FFGLExtensions.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="glGenRenderbuffersEXTPROC" Collapsed="true">
+    <Position X="27.25" Y="5.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>C:\Users\potiyo\Documents\GitHub\FFGLModules\FFGL\FFGLExtensions.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="glGenerateMipmapEXTPROC" Collapsed="true">
+    <Position X="23.75" Y="5.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>C:\Users\potiyo\Documents\GitHub\FFGLModules\FFGL\FFGLExtensions.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="glGetFramebufferAttachmentParameterivEXTPROC" Collapsed="true">
+    <Position X="18.5" Y="6.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>C:\Users\potiyo\Documents\GitHub\FFGLModules\FFGL\FFGLExtensions.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="glGetRenderbufferParameterivEXTPROC" Collapsed="true">
+    <Position X="27.25" Y="6.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>C:\Users\potiyo\Documents\GitHub\FFGLModules\FFGL\FFGLExtensions.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="glIsFramebufferEXTPROC" Collapsed="true">
+    <Position X="22" Y="7" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>C:\Users\potiyo\Documents\GitHub\FFGLModules\FFGL\FFGLExtensions.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="glIsRenderbufferEXTPROC" Collapsed="true">
+    <Position X="23.75" Y="7" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>C:\Users\potiyo\Documents\GitHub\FFGLModules\FFGL\FFGLExtensions.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="glRenderbufferStorageEXTPROC" Collapsed="true">
+    <Position X="27.25" Y="9.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>C:\Users\potiyo\Documents\GitHub\FFGLModules\FFGL\FFGLExtensions.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="GLcharARB" Collapsed="true">
+    <Position X="15" Y="4.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>C:\Users\potiyo\Documents\GitHub\FFGLModules\FFGL\FFGLExtensions.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="GLhandleARB" Collapsed="true">
+    <Position X="16.75" Y="7" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>C:\Users\potiyo\Documents\GitHub\FFGLModules\FFGL\FFGLExtensions.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="glDeleteObjectARBPROC" Collapsed="true">
+    <Position X="29" Y="4.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>C:\Users\potiyo\Documents\GitHub\FFGLModules\FFGL\FFGLExtensions.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="glGetHandleARBPROC" Collapsed="true">
+    <Position X="20.25" Y="6.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>C:\Users\potiyo\Documents\GitHub\FFGLModules\FFGL\FFGLExtensions.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="glDetachObjectARBPROC" Collapsed="true">
+    <Position X="32.5" Y="4.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>C:\Users\potiyo\Documents\GitHub\FFGLModules\FFGL\FFGLExtensions.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="glCreateShaderObjectARBPROC" Collapsed="true">
+    <Position X="23.75" Y="4.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>C:\Users\potiyo\Documents\GitHub\FFGLModules\FFGL\FFGLExtensions.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="glShaderSourceARBPROC" Collapsed="true">
+    <Position X="29" Y="9.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>C:\Users\potiyo\Documents\GitHub\FFGLModules\FFGL\FFGLExtensions.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="glCompileShaderARBPROC" Collapsed="true">
+    <Position X="20.25" Y="4.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>C:\Users\potiyo\Documents\GitHub\FFGLModules\FFGL\FFGLExtensions.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="glCreateProgramObjectARBPROC" Collapsed="true">
+    <Position X="22" Y="4.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>C:\Users\potiyo\Documents\GitHub\FFGLModules\FFGL\FFGLExtensions.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="glAttachObjectARBPROC" Collapsed="true">
+    <Position X="23.75" Y="4" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>C:\Users\potiyo\Documents\GitHub\FFGLModules\FFGL\FFGLExtensions.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="glLinkProgramARBPROC" Collapsed="true">
+    <Position X="25.5" Y="7" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>C:\Users\potiyo\Documents\GitHub\FFGLModules\FFGL\FFGLExtensions.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="glUseProgramObjectARBPROC" Collapsed="true">
+    <Position X="29" Y="10.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>C:\Users\potiyo\Documents\GitHub\FFGLModules\FFGL\FFGLExtensions.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="glValidateProgramARBPROC" Collapsed="true">
+    <Position X="30.75" Y="10.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>C:\Users\potiyo\Documents\GitHub\FFGLModules\FFGL\FFGLExtensions.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="glUniform1fARBPROC" Collapsed="true">
+    <Position X="32.5" Y="9.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>C:\Users\potiyo\Documents\GitHub\FFGLModules\FFGL\FFGLExtensions.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="glUniform2fARBPROC" Collapsed="true">
+    <Position X="20.25" Y="10" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>C:\Users\potiyo\Documents\GitHub\FFGLModules\FFGL\FFGLExtensions.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="glUniform3fARBPROC" Collapsed="true">
+    <Position X="27.25" Y="10" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>C:\Users\potiyo\Documents\GitHub\FFGLModules\FFGL\FFGLExtensions.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="glUniform4fARBPROC" Collapsed="true">
+    <Position X="15" Y="10.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>C:\Users\potiyo\Documents\GitHub\FFGLModules\FFGL\FFGLExtensions.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="glUniform1iARBPROC" Collapsed="true">
+    <Position X="16.75" Y="10" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>C:\Users\potiyo\Documents\GitHub\FFGLModules\FFGL\FFGLExtensions.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="glUniform2iARBPROC" Collapsed="true">
+    <Position X="23.75" Y="10" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>C:\Users\potiyo\Documents\GitHub\FFGLModules\FFGL\FFGLExtensions.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="glUniform3iARBPROC" Collapsed="true">
+    <Position X="30.75" Y="10" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>C:\Users\potiyo\Documents\GitHub\FFGLModules\FFGL\FFGLExtensions.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="glUniform4iARBPROC" Collapsed="true">
+    <Position X="18.5" Y="10.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>C:\Users\potiyo\Documents\GitHub\FFGLModules\FFGL\FFGLExtensions.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="glUniform1fvARBPROC" Collapsed="true">
+    <Position X="15" Y="10" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>C:\Users\potiyo\Documents\GitHub\FFGLModules\FFGL\FFGLExtensions.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="glUniform2fvARBPROC" Collapsed="true">
+    <Position X="22" Y="10" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>C:\Users\potiyo\Documents\GitHub\FFGLModules\FFGL\FFGLExtensions.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="glUniform3fvARBPROC" Collapsed="true">
+    <Position X="29" Y="10" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>C:\Users\potiyo\Documents\GitHub\FFGLModules\FFGL\FFGLExtensions.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="glUniform4fvARBPROC" Collapsed="true">
+    <Position X="16.75" Y="10.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>C:\Users\potiyo\Documents\GitHub\FFGLModules\FFGL\FFGLExtensions.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="glUniform1ivARBPROC" Collapsed="true">
+    <Position X="18.5" Y="10" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>C:\Users\potiyo\Documents\GitHub\FFGLModules\FFGL\FFGLExtensions.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="glUniform2ivARBPROC" Collapsed="true">
+    <Position X="25.5" Y="10" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>C:\Users\potiyo\Documents\GitHub\FFGLModules\FFGL\FFGLExtensions.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="glUniform3ivARBPROC" Collapsed="true">
+    <Position X="32.5" Y="10" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>C:\Users\potiyo\Documents\GitHub\FFGLModules\FFGL\FFGLExtensions.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="glUniform4ivARBPROC" Collapsed="true">
+    <Position X="20.25" Y="10.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>C:\Users\potiyo\Documents\GitHub\FFGLModules\FFGL\FFGLExtensions.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="glUniformMatrix2fvARBPROC" Collapsed="true">
+    <Position X="22" Y="10.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>C:\Users\potiyo\Documents\GitHub\FFGLModules\FFGL\FFGLExtensions.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="glUniformMatrix3fvARBPROC" Collapsed="true">
+    <Position X="23.75" Y="10.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>C:\Users\potiyo\Documents\GitHub\FFGLModules\FFGL\FFGLExtensions.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="glUniformMatrix4fvARBPROC" Collapsed="true">
+    <Position X="25.5" Y="10.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>C:\Users\potiyo\Documents\GitHub\FFGLModules\FFGL\FFGLExtensions.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="glGetObjectParameterfvARBPROC" Collapsed="true">
+    <Position X="23.75" Y="6.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>C:\Users\potiyo\Documents\GitHub\FFGLModules\FFGL\FFGLExtensions.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="glGetObjectParameterivARBPROC" Collapsed="true">
+    <Position X="25.5" Y="6.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>C:\Users\potiyo\Documents\GitHub\FFGLModules\FFGL\FFGLExtensions.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="glGetInfoLogARBPROC" Collapsed="true">
+    <Position X="22" Y="6.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>C:\Users\potiyo\Documents\GitHub\FFGLModules\FFGL\FFGLExtensions.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="glGetAttachedObjectsARBPROC" Collapsed="true">
+    <Position X="30.75" Y="5.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>C:\Users\potiyo\Documents\GitHub\FFGLModules\FFGL\FFGLExtensions.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="glGetUniformLocationARBPROC" Collapsed="true">
+    <Position X="15" Y="7" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>C:\Users\potiyo\Documents\GitHub\FFGLModules\FFGL\FFGLExtensions.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="glGetActiveUniformARBPROC" Collapsed="true">
+    <Position X="29" Y="5.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>C:\Users\potiyo\Documents\GitHub\FFGLModules\FFGL\FFGLExtensions.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="glGetUniformfvARBPROC" Collapsed="true">
+    <Position X="30.75" Y="6.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>C:\Users\potiyo\Documents\GitHub\FFGLModules\FFGL\FFGLExtensions.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="glGetUniformivARBPROC" Collapsed="true">
+    <Position X="32.5" Y="6.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>C:\Users\potiyo\Documents\GitHub\FFGLModules\FFGL\FFGLExtensions.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="glGetShaderSourceARBPROC" Collapsed="true">
+    <Position X="29" Y="6.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>C:\Users\potiyo\Documents\GitHub\FFGLModules\FFGL\FFGLExtensions.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="glBindBufferARBPROC" Collapsed="true">
+    <Position X="25.5" Y="4" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>C:\Users\potiyo\Documents\GitHub\FFGLModules\FFGL\FFGLExtensions.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="glDeleteBuffersARBPROC" Collapsed="true">
+    <Position X="25.5" Y="4.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>C:\Users\potiyo\Documents\GitHub\FFGLModules\FFGL\FFGLExtensions.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="glGenBuffersARBPROC" Collapsed="true">
+    <Position X="22" Y="5.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>C:\Users\potiyo\Documents\GitHub\FFGLModules\FFGL\FFGLExtensions.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="glIsBufferARBPROC" Collapsed="true">
+    <Position X="20.25" Y="7" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>C:\Users\potiyo\Documents\GitHub\FFGLModules\FFGL\FFGLExtensions.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="glBufferDataARBPROC" Collapsed="true">
+    <Position X="30.75" Y="4" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>C:\Users\potiyo\Documents\GitHub\FFGLModules\FFGL\FFGLExtensions.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="glBufferSubDataARBPROC" Collapsed="true">
+    <Position X="32.5" Y="4" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>C:\Users\potiyo\Documents\GitHub\FFGLModules\FFGL\FFGLExtensions.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="glGetBufferSubDataARBPROC" Collapsed="true">
+    <Position X="16.75" Y="6.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>C:\Users\potiyo\Documents\GitHub\FFGLModules\FFGL\FFGLExtensions.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="glMapBufferARBPROC" Collapsed="true">
+    <Position X="27.25" Y="7" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>C:\Users\potiyo\Documents\GitHub\FFGLModules\FFGL\FFGLExtensions.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="glUnmapBufferARBPROC" Collapsed="true">
+    <Position X="27.25" Y="10.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>C:\Users\potiyo\Documents\GitHub\FFGLModules\FFGL\FFGLExtensions.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="glGetBufferParameterivARBPROC" Collapsed="true">
+    <Position X="32.5" Y="5.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>C:\Users\potiyo\Documents\GitHub\FFGLModules\FFGL\FFGLExtensions.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="glGetBufferPointervARBPROC" Collapsed="true">
+    <Position X="15" Y="6.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>C:\Users\potiyo\Documents\GitHub\FFGLModules\FFGL\FFGLExtensions.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="wglSwapIntervalEXTPROC" Collapsed="true">
+    <Position X="18.5" Y="11.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>C:\Users\potiyo\Documents\GitHub\FFGLModules\FFGL\FFGLExtensions.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="wglGetSwapIntervalEXTPROC" Collapsed="true">
+    <Position X="16.75" Y="11.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>C:\Users\potiyo\Documents\GitHub\FFGLModules\FFGL\FFGLExtensions.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="FFGLTexCoords" Collapsed="true">
+    <Position X="5.5" Y="12.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>C:\Users\potiyo\Documents\GitHub\FFGLModules\FFGL\FFGLLib.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="FPCREATEINSTANCEGL" Collapsed="true">
+    <Position X="20.25" Y="4" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>C:\Users\potiyo\Documents\GitHub\FFGLModules\FFGL\FFGLPluginInfo.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="DWORD" Collapsed="true">
+    <Position X="16.75" Y="4" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>C:\Users\potiyo\Documents\GitHub\FFGLModules\FFGL\FreeFrame.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="BYTE" Collapsed="true">
+    <Position X="15" Y="4" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>C:\Users\potiyo\Documents\GitHub\FFGLModules\FFGL\FreeFrame.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="LPVOID" Collapsed="true">
+    <Position X="32.5" Y="10.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>C:\Users\potiyo\Documents\GitHub\FFGLModules\FFGL\FreeFrame.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="PluginInfoStruct" Collapsed="true">
+    <Position X="1.5" Y="8.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>C:\Users\potiyo\Documents\GitHub\FFGLModules\FFGL\FreeFrame.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="PluginExtendedInfoStruct" Collapsed="true">
+    <Position X="8.5" Y="7.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>C:\Users\potiyo\Documents\GitHub\FFGLModules\FFGL\FreeFrame.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="VideoInfoStruct" Collapsed="true">
+    <Position X="8.5" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>C:\Users\potiyo\Documents\GitHub\FFGLModules\FFGL\FreeFrame.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="ProcessFrameCopyStruct" Collapsed="true">
+    <Position X="4.5" Y="7.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>C:\Users\potiyo\Documents\GitHub\FFGLModules\FFGL\FreeFrame.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="SetParameterStruct" Collapsed="true">
+    <Position X="4.5" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>C:\Users\potiyo\Documents\GitHub\FFGLModules\FFGL\FreeFrame.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="plugMainUnion" Collapsed="true">
+    <Position X="15" Y="11.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>C:\Users\potiyo\Documents\GitHub\FFGLModules\FFGL\FreeFrame.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="FF_Main_FuncPtr" Collapsed="true">
+    <Position X="18.5" Y="4" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>C:\Users\potiyo\Documents\GitHub\FFGLModules\FFGL\FreeFrame.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Enum Name="ParamNames" Collapsed="true">
+    <Position X="15" Y="3" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAACAAAAABAAAAQIAABAEAAAAAAAAAAAAgCgAAAA=</HashCode>
+      <FileName>src\FFGLFlows.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

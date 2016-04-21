@@ -1,18 +1,6 @@
 #include "FFGLFlows.h"
-#include <map>
 #include <string>
 
-// Parameters
-#define FFPARAM_NOISE_FACTOR	(0)
-#define FFPARAM_INPUT_BLENDING_FACTOR	(1)
-#define FFPARAM_VALUE3_NOISE_TEXTURES_AMOUNT	(2)
-#define FFPARAM_NOISE_SCALE	(3)
-#define FFPARAM_VALUE5_XFACTOR	(4)
-#define FFPARAM_VALUE6_YFACTOR	(5)
-#define FFPARAM_VALUE_VELOCITY	(6)
-#define FFPARAM_VALUE_VELOCITY_SCALE (7)
-#define FFPARAM_VALUE_XSHIFT	(8)
-#define FFPARAM_VALUE_YSHIFT	(9)
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -70,7 +58,8 @@ FFGLFlows::FFGLFlows() :CFreeFrameGLPlugin()
 
 FFGLFlows::~FFGLFlows()
 {
-
+	parameterDefinitions->clear();
+	delete parameterDefinitions;
 }
 
 
@@ -247,9 +236,9 @@ DWORD FFGLFlows::ProcessOpenGL(ProcessOpenGLStruct *pGL)
 	GLuint dstTexture;
 
 	if (this->noiseTexturesIds == NULL)
-		this->CreateTextures(	this->noiseDimScale * this->maxHorisontalNoiseDim,
-								this->noiseDimScale * this->maxVerticalNoiseDim,
-								this->ntexCount	);
+		this->CreateTextures(this->noiseDimScale * this->maxHorisontalNoiseDim,
+			this->noiseDimScale * this->maxVerticalNoiseDim,
+			this->ntexCount);
 
 
 	if (fbos->isEven)
@@ -499,65 +488,62 @@ DWORD FFGLFlows::GetParameter(DWORD dwIndex)
 {
 	DWORD dwRet;
 
-	switch (dwIndex)
+	auto result = parameterDefinitions->find(dwIndex);
+
+	if (result != parameterDefinitions->end())
 	{
-
-	case FFPARAM_NOISE_FACTOR:
-		*((float *)(unsigned)(&dwRet)) = this->alphaNoisesTexture;
+		*((float *)(unsigned)(&dwRet)) = *(result->second.paramDefaultValuePtr);
 		return dwRet;
-
-	case FFPARAM_INPUT_BLENDING_FACTOR:
-		*((float *)(unsigned)(&dwRet)) = this->alphaImageTexture;
-		return dwRet;
-
-	case FFPARAM_VALUE3_NOISE_TEXTURES_AMOUNT:
-		*((float *)(unsigned)(&dwRet)) = this->noiseTexturesCountFactor;
-		return dwRet;
-
-	case FFPARAM_NOISE_SCALE:
-		*((float *)(unsigned)(&dwRet)) = this->noiseDimScale;
-		return dwRet;
-
-	case FFPARAM_VALUE5_XFACTOR:
-		*((float *)(unsigned)(&dwRet)) = this->xFactor;
-		return dwRet;
-
-	case FFPARAM_VALUE6_YFACTOR:
-		*((float *)(unsigned)(&dwRet)) = this->yFactor;
-		return dwRet;
-
-	case FFPARAM_VALUE_VELOCITY:
-		*((float *)(unsigned)(&dwRet)) = this->velocity;
-		return dwRet;
-
-	case FFPARAM_VALUE_VELOCITY_SCALE:
-		*((float *)(unsigned)(&dwRet)) = this->velocityScale;
-		return dwRet;
-
-	case FFPARAM_VALUE_XSHIFT:
-		*((float *)(unsigned)(&dwRet)) = this->xShift;
-		return dwRet;
-
-	case FFPARAM_VALUE_YSHIFT:
-		*((float *)(unsigned)(&dwRet)) = this->yShift;
-		return dwRet;
-
-	default:
-		return FF_FAIL;
 	}
 
-	return 0;
+	return FF_FAIL;
+	
 }
 
 DWORD FFGLFlows::SetParameter(const SetParameterStruct* pParam)
-{
-
+{	
 	if (pParam != NULL)
 	{
-		bool isFieldChanged = false;
 
-		float fNewValue = *((float *)(unsigned)&(pParam->NewParameterValue));
+		float newValue = *((float *)(unsigned)&(pParam->NewParameterValue));
 
+		auto result = parameterDefinitions->find(pParam->ParameterNumber);
+
+		if (result != parameterDefinitions->end())
+		{
+			*(result->second.paramDefaultValuePtr) = newValue;
+
+			switch (pParam->ParameterNumber)			
+			{
+				case (int)ParamNames::NOISES_TEXTURES_COUNT:
+				{
+					auto newNtexCount = mulFtoI(noiseTexturesCountFactor, maxNoiseTexturesAmount);
+					newNtexCount = newNtexCount == 0 ? 1 : newNtexCount;
+
+					if (newNtexCount != this->ntexCount)
+					{
+						this->DeleteNoiseTextures();
+						this->ntexCount = newNtexCount;
+					};
+				}; 
+				break;
+
+				case (int)ParamNames::NOISES_SCALE:
+				{
+					this->DeleteNoiseTextures();
+				};
+				break;
+
+				default: break;
+			}
+		}
+		else
+		{
+			FF_FAIL;
+		}
+
+
+		/*
 		switch (pParam->ParameterNumber)
 		{
 
@@ -638,7 +624,7 @@ DWORD FFGLFlows::SetParameter(const SetParameterStruct* pParam)
 
 		default:
 			return FF_FAIL;
-		}
+		}*/
 
 
 		return FF_SUCCESS;
