@@ -32,7 +32,7 @@ struct ParamDefinition
 public:
 	std::string paramName;
 	DWORD		paramType;
-	float*		paramDefaultValuePtr;
+	float*		valueStorage;
 };
 
 

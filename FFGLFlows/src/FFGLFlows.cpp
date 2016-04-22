@@ -1,6 +1,4 @@
 #include "FFGLFlows.h"
-#include <string>
-
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -52,7 +50,7 @@ FFGLFlows::FFGLFlows() :CFreeFrameGLPlugin()
 	for (auto param : *parameterDefinitions)
 	{
 		auto value = param.second;
-		SetParamInfo(param.first, value.paramName.c_str(), value.paramType, value.paramDefaultValuePtr);
+		SetParamInfo(param.first, value.paramName.c_str(), value.paramType, value.valueStorage);
 	}
 }
 
@@ -446,15 +444,10 @@ void FFGLFlows::CreateTextures(int width, int height, int texNum)
 	int i, k, t;
 
 	for (i = 0; i < 256; i++) lut[i] = i < 127 ? 0 : 255;
-
-
 	for (i = 0; i < height * width; i++)
 		phase[i] = rand() % 256;
 
-
 	glGenTextures(texNum, this->noiseTexturesIds);
-
-	GLenum errCode;
 
 	for (k = 0; k < texNum; k++)
 	{
@@ -463,19 +456,9 @@ void FFGLFlows::CreateTextures(int width, int height, int texNum)
 			pat[i] = lut[(t + phase[i]) % 255];
 
 		glBindTexture(GL_TEXTURE_2D, this->noiseTexturesIds[k]);
-		errCode = glGetError();
-
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-		errCode = glGetError();
-
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-		errCode = glGetError();
-
 		glTexImage2D(GL_TEXTURE_2D, 0, GL_LUMINANCE8, width, height, 0, GL_LUMINANCE, GL_UNSIGNED_BYTE, pat);
-		errCode = glGetError();
-		if (errCode != 0)
-			errCode = glGetError();
-
 	}
 
 	delete phase;
@@ -492,7 +475,7 @@ DWORD FFGLFlows::GetParameter(DWORD dwIndex)
 
 	if (result != parameterDefinitions->end())
 	{
-		*((float *)(unsigned)(&dwRet)) = *(result->second.paramDefaultValuePtr);
+		*((float *)(unsigned)(&dwRet)) = *(result->second.valueStorage);
 		return dwRet;
 	}
 
@@ -511,124 +494,25 @@ DWORD FFGLFlows::SetParameter(const SetParameterStruct* pParam)
 
 		if (result != parameterDefinitions->end())
 		{
-			*(result->second.paramDefaultValuePtr) = newValue;
-
-			switch (pParam->ParameterNumber)			
+			if (newValue != *(result->second.valueStorage))
 			{
-				case (int)ParamNames::NOISES_TEXTURES_COUNT:
-				{
-					auto newNtexCount = mulFtoI(noiseTexturesCountFactor, maxNoiseTexturesAmount);
-					newNtexCount = newNtexCount == 0 ? 1 : newNtexCount;
+				*(result->second.valueStorage) = newValue;
 
-					if (newNtexCount != this->ntexCount)
-					{
-						this->DeleteNoiseTextures();
-						this->ntexCount = newNtexCount;
-					};
-				}; 
-				break;
-
-				case (int)ParamNames::NOISES_SCALE:
+				if (pParam->ParameterNumber == (int)ParamNames::NOISES_TEXTURES_COUNT ||
+					pParam->ParameterNumber == (int)ParamNames::NOISES_SCALE)
 				{
 					this->DeleteNoiseTextures();
-				};
-				break;
-
-				default: break;
-			}
+					auto newNtexCount = mulFtoI(noiseTexturesCountFactor, maxNoiseTexturesAmount);
+					this->ntexCount = newNtexCount == 0 ? 1 : newNtexCount;
+				}
+			}			
 		}
 		else
 		{
-			FF_FAIL;
+			return FF_FAIL;
 		}
 
-
-		/*
-		switch (pParam->ParameterNumber)
-		{
-
-
-		case FFPARAM_NOISE_FACTOR:
-			this->alphaNoisesTexture = fNewValue;
-			break;
-
-		case FFPARAM_INPUT_BLENDING_FACTOR:
-			this->alphaImageTexture = fNewValue;
-			break;
-
-		case FFPARAM_VALUE3_NOISE_TEXTURES_AMOUNT:
-		{
-			this->noiseTexturesCountFactor = fNewValue;
-
-			auto newAmount = mulFtoI(noiseTexturesCountFactor, maxNoiseTexturesAmount);
-			newAmount = newAmount == 0 ? 1 : newAmount;
-
-			if (newAmount != this->ntexCount)
-			{
-				this->DeleteNoiseTextures();
-				this->ntexCount = newAmount;
-			};
-		};
-		break;
-
-		case FFPARAM_NOISE_SCALE:
-		{
-			if (fNewValue != noiseDimScale)
-			{
-				this->DeleteNoiseTextures();
-				this->noiseDimScale = fNewValue;
-			};
-		};
-		break;
-
-
-		case FFPARAM_VALUE5_XFACTOR:
-		{
-			isFieldChanged = (this->xFactor != fNewValue);
-			this->xFactor = fNewValue;
-		};
-		break;
-
-		case FFPARAM_VALUE6_YFACTOR:
-		{
-			isFieldChanged = (this->yFactor != fNewValue);
-			this->yFactor = fNewValue;
-		};
-		break;
-
-		case FFPARAM_VALUE_VELOCITY:
-		{
-			this->velocity = fNewValue;
-		};
-		break;
-
-		case FFPARAM_VALUE_VELOCITY_SCALE:
-		{
-			this->velocityScale = fNewValue;
-		};
-		break;
-
-		case FFPARAM_VALUE_XSHIFT:
-		{
-			isFieldChanged = (this->xShift != fNewValue);
-			this->xShift = fNewValue;
-		};
-		break;
-
-		case FFPARAM_VALUE_YSHIFT:
-		{
-			isFieldChanged = (this->yShift != fNewValue);
-			this->yShift = fNewValue;
-		};
-		break;
-
-		default:
-			return FF_FAIL;
-		}*/
-
-
 		return FF_SUCCESS;
-
 	}
 
 	return FF_FAIL;
