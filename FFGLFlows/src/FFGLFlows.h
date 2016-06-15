@@ -10,6 +10,7 @@
 #include <map>
 
 
+
 #define STRINGIFY( expr ) new std::string(#expr)
 #define mulFtoI(v1, v2) (int)(((float)(v1))*((float)(v2)))
 
@@ -19,6 +20,7 @@ enum class ParamNames : int
 	IMG_BLENDING_FACTOR,
 	NOISES_TEXTURES_COUNT,
 	NOISES_SCALE,
+	OPERATOR_TYPE,
 	XFACTOR,
 	YFACTOR,
 	XSHIFT,
@@ -86,7 +88,12 @@ private:
 
 
 	std::string* vertexShaderCode;
-	std::string* fragmentShaderCode;
+
+	std::string* fscUniform;
+	std::string* fscAlnalytic;
+	std::string* fscSobel;
+	std::string* fscDirect;
+	std::string* fscAdvectionFunc;
 
 public:
 	FBOPair* CreateFBO(const FFGLViewportStruct *vp);
@@ -94,7 +101,10 @@ public:
 private:
 	
 	FFGLExtensions m_extensions;
-	FFGLShader m_shader;
+
+	FFGLShader analyticFieldShader;
+	FFGLShader sobelFieldShader;
+	FFGLShader directFieldShader;
 
 	std::map<int, ParamDefinition>* parameterDefinitions;
 	
@@ -105,16 +115,18 @@ private:
 
 	float xFactor{ 0.1f };
 	float yFactor{ 0.1f };
-	float velocity{ 0.6f };
-	float velocityScale{ 0.6f };
 	float xShift{ 0.0f };
 	float yShift{ 0.0f };
-	float noiseDimScale = 0.5f;
-	float noiseTexturesCountFactor = 0.5f;
+
+	float velocity{ 0.5f };
+	float velocityScale{ 0.5f };	
+	float noiseDimScale{ 0.5f };
+	float noiseTexturesCountFactor{ 0.5f };
+	float operatorTypeFactor{ 0.5 };
 
 	int ntexCount = mulFtoI(noiseTexturesCountFactor, maxNoiseTexturesAmount);
 
-	float fieldSource { 0.5 };
+	
 
 
 	GLuint maxHorisontalNoiseDim;

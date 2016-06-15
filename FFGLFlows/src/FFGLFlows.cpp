@@ -36,6 +36,7 @@ FFGLFlows::FFGLFlows() :CFreeFrameGLPlugin()
 		{ (int)ParamNames::IMG_BLENDING_FACTOR, ParamDefinition{ "Img fraction", FF_TYPE_STANDARD, &this->alphaImageTexture } },
 		{ (int)ParamNames::NOISES_TEXTURES_COUNT, ParamDefinition{ "Noises count", FF_TYPE_STANDARD, &this->noiseTexturesCountFactor } },
 		{ (int)ParamNames::NOISES_SCALE, ParamDefinition{ "Noises scale", FF_TYPE_STANDARD, &this->noiseDimScale } },
+		{ (int)ParamNames::OPERATOR_TYPE, ParamDefinition{ "Operator type", FF_TYPE_STANDARD, &this->operatorTypeFactor } },
 
 		{ (int)ParamNames::VELOCITY, ParamDefinition{ "Velosity", FF_TYPE_STANDARD, &this->velocity } },
 		{ (int)ParamNames::VELOCITY_SCALE, ParamDefinition{ "Velosity Scale", FF_TYPE_STANDARD, &this->velocityScale } },
@@ -65,6 +66,8 @@ FFGLFlows::~FFGLFlows()
 
 DWORD FFGLFlows::InitGL(const FFGLViewportStruct *vp)
 {
+	using namespace std;
+
 	this->vertexShaderCode = STRINGIFY(
 		void main()
 	{
@@ -75,87 +78,119 @@ DWORD FFGLFlows::InitGL(const FFGLViewportStruct *vp)
 		gl_FrontColor = gl_Color;
 	});
 
-
-	this->fragmentShaderCode = STRINGIFY(
-		uniform sampler2D texture0;
+	// Pixel shader: uniform variables
+	this->fscUniform = STRINGIFY(	
+	
+	uniform sampler2D texture0;
 	uniform sampler2D texture1;
 	uniform sampler2D texture2;
+
+	uniform float dx;
+	uniform float dy;
+
 	uniform float alpha;
 	uniform float imgFactor;
 	uniform float velocity;
 	uniform float velocityScale;
-	uniform float dx;
-	uniform float dy;
-	uniform int fieldSource;
 
-	float getWeight(vec4 cVal)
-	{
-		return cVal.r + cVal.g + cVal.b + cVal.a;
-	}
+	
 
-	vec2  getDirectField()
+	);
+
+	// Analytic field operator
+	this->fscAlnalytic = STRINGIFY(
+
+	vec2 getField()
 	{
 		vec2 field = vec2(0.0);
-		vec4 texValue = texture2D(texture2, gl_TexCoord[2]);
-		field = texValue.xy - vec2(0.5);
-		return field * texValue.z;
+		return field;
+	}
+	
+	);
+
+	// 3x3 sobel operator
+	this->fscSobel = STRINGIFY(
+
+	float getWeight(vec4 cVal) 
+	{ 
+		return cVal.r + cVal.g + cVal.b + cVal.a; 
 	}
 
-	vec2 getSobel()
-	{
-		bool isInsideOfArea = false;
-		vec4 gradient = vec4(0.0);
-		vec2 texCoords = gl_TexCoord[2].st;
+	vec2 getField()
+	{		
+		vec2 gradient = vec2(0.0);
+		vec2 texCoords = gl_TexCoord[2].xy;
+		
+		float z1 = getWeight(texture2D(texture2, vec2(texCoords.x - dx, texCoords.y + dy)));
+		float z2 = getWeight(texture2D(texture2, vec2(texCoords.x, texCoords.y + dy)));
+		float z3 = getWeight(texture2D(texture2, vec2(texCoords.x + dx, texCoords.y + dy)));
+		float z4 = getWeight(texture2D(texture2, vec2(texCoords.x - dx, texCoords.y)));
 
-		vec4 z1 = getWeight(texture2D(texture2, vec2(texCoords.x - dx, texCoords.y + dy)));
-		vec4 z2 = getWeight(texture2D(texture2, vec2(texCoords.x, texCoords.y + dy)));
-		vec4 z3 = getWeight(texture2D(texture2, vec2(texCoords.x + dx, texCoords.y + dy)));
-		vec4 z4 = getWeight(texture2D(texture2, vec2(texCoords.x - dx, texCoords.y)));
-
-		vec4 z6 = getWeight(texture2D(texture2, vec2(texCoords.x + dx, texCoords.y)));
-		vec4 z7 = getWeight(texture2D(texture2, vec2(texCoords.x - dx, texCoords.y - dy)));
-		vec4 z8 = getWeight(texture2D(texture2, vec2(texCoords.x, texCoords.y - dy)));
-		vec4 z9 = getWeight(texture2D(texture2, vec2(texCoords.x + dx, texCoords.y - dy)));
+		float z6 = getWeight(texture2D(texture2, vec2(texCoords.x + dx, texCoords.y)));
+		float z7 = getWeight(texture2D(texture2, vec2(texCoords.x - dx, texCoords.y - dy)));
+		float z8 = getWeight(texture2D(texture2, vec2(texCoords.x, texCoords.y - dy)));
+		float z9 = getWeight(texture2D(texture2, vec2(texCoords.x + dx, texCoords.y - dy)));
 
 		gradient.y = (z7 + 2 * z8 + z9) - (z1 + 2 * z2 + z3);
 		gradient.x = -(z3 + 2 * z6 + z9) + (z1 + 2 * z4 + z7);
 
+		//vec4 zz1 = vec2(horizontalStep, verticalStep);
+
+		return gradient;
+
+		/*		
 		isInsideOfArea = (z1 == z2) && (z2 == z3) && (z3 == z4) && (z4 == z6) && (z6 == z7) && (z7 == z8) && (z8 == z9);
 		if (!isInsideOfArea) {
 			return gradient.xy;
 		}
 		else {
 			return vec2(0.5) - texCoords;
-		}
+		}*/
 	}
 
+	);
+
+	// Get field direction from image 
+	this->fscDirect = STRINGIFY(
+
+	vec2  getField()
+	{
+		vec2 field = vec2(0.0);
+		vec2 texCoords = gl_TexCoord[2].xy;
+
+		vec4 texValue = texture2D(texture2, texCoords);
+		field = texValue.xy - vec2(0.5);
+		return field * texValue.z;
+	}
+
+	);
+
+	// Advection operator
+	this->fscAdvectionFunc = STRINGIFY(
 	void main()
 	{
 		vec2 texCoord = gl_TexCoord[0].st;
 		vec2 coords = vec2(-1.0, -1.0) + 2.0 * texCoord;
 		vec4 imgColor = texture2D(texture2, gl_TexCoord[2]);
 
-
-		//"	vec2 field = velocity * texture2D(texture2, gl_TexCoord[2]);"
-
-		//"	vec2 field = velocity * getSobel(gl_TexCoord[2]);"
-
-		vec2 field = velocityScale * (velocity - 0.5) * getDirectField();
+		vec2 field = velocityScale * (velocity - 0.5) * getField();
 
 		vec2 samplerCoord = texCoord - field;
 		vec4 srcColor = texture2D(texture0, samplerCoord);
 		vec4 noiseColor = texture2D(texture1, vec2(texCoord.s, texCoord.t));
 		gl_FragColor = (1 - alpha) * (((1 - imgFactor) * srcColor) + (imgFactor * imgColor)) + alpha * noiseColor;
+	}
+	);
 
-	});
 
 
 	m_extensions.Initialize();
-	m_shader.SetExtensions(&m_extensions);
 
-	maxHorisontalNoiseDim = vp->width;
-	maxVerticalNoiseDim = vp->height;
+	analyticFieldShader.SetExtensions(&m_extensions);
+	sobelFieldShader.SetExtensions(&m_extensions);
+	directFieldShader.SetExtensions(&m_extensions);
 
+	
 	bool lIsExtSupported = m_extensions.isExtensionSupported("GL_ARB_vertex_buffer_object") &&
 		m_extensions.isExtensionSupported("GL_ARB_texture_float") &&
 		m_extensions.isExtensionSupported("GL_ARB_shader_objects");
@@ -163,33 +198,28 @@ DWORD FFGLFlows::InitGL(const FFGLViewportStruct *vp)
 	if (!lIsExtSupported)
 		return FF_FAIL;
 
-	const GLubyte * glslInfo = glGetString(GL_SHADING_LANGUAGE_VERSION);
+	string sobelShaderCode{ *(this->fscUniform) + *(this->fscSobel) + *(this->fscAdvectionFunc) };
+	sobelFieldShader.Compile(this->vertexShaderCode->c_str(), sobelShaderCode.c_str());
 
-	int isCompiled = m_shader.Compile(this->vertexShaderCode->c_str(), this->fragmentShaderCode->c_str());
+	string directShaderCode{ *(this->fscUniform) + *(this->fscDirect) + *(this->fscAdvectionFunc) };
+	directFieldShader.Compile(this->vertexShaderCode->c_str(), directShaderCode.c_str());
 
-	if (isCompiled != 1)
-		return FF_FAIL;
+	string analyticShaderCode{ *(this->fscUniform) + *(this->fscAlnalytic) + *(this->fscAdvectionFunc) };
+	analyticFieldShader.Compile(this->vertexShaderCode->c_str(), analyticShaderCode.c_str());
+
+	delete this->vertexShaderCode;
+	delete this->fscUniform;
+	delete this->fscAlnalytic;
+	delete this->fscDirect;
+	delete this->fscSobel;
+	delete this->fscAdvectionFunc;
 
 	this->fbos = CreateFBO(vp);
 	if (this->fbos == nullptr)
 		return FF_FAIL;
 
-	m_shader.BindShader();
-
-	GLint textureUnitParam = m_shader.FindUniform("texture0");
-	m_extensions.glUniform1iARB(textureUnitParam, 0);
-
-	textureUnitParam = m_shader.FindUniform("texture1");
-	m_extensions.glUniform1iARB(textureUnitParam, 1);
-
-	textureUnitParam = m_shader.FindUniform("texture2");
-	m_extensions.glUniform1iARB(textureUnitParam, 2);
-
-	m_shader.UnbindShader();
-
-
-	delete this->vertexShaderCode;
-	delete this->fragmentShaderCode;
+	maxHorisontalNoiseDim = vp->width;
+	maxVerticalNoiseDim = vp->height;
 
 	return FF_SUCCESS;
 }
@@ -269,26 +299,23 @@ DWORD FFGLFlows::ProcessOpenGL(ProcessOpenGLStruct *pGL)
 	// set rendering destination to FBO
 	m_extensions.glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, dstRenderBuffer);
 	glClear(GL_COLOR_BUFFER_BIT);
-	m_shader.BindShader();
 
 
-	GLuint paramId = m_shader.FindUniform("dx");
-	m_extensions.glUniform1fARB(paramId, 1.0f / (float)Texture.Width);
+	FFGLShader* usedShader = this->operatorTypeFactor > 0.5 ? (&directFieldShader) : (&sobelFieldShader);
 
-	paramId = m_shader.FindUniform("dy");
-	m_extensions.glUniform1fARB(paramId, 1.0f / (float)Texture.Height);
+	usedShader->BindShader();
+	
+	m_extensions.glUniform1iARB(usedShader->FindUniform("texture0"), 0);
+	m_extensions.glUniform1iARB(usedShader->FindUniform("texture1"), 1);
+	m_extensions.glUniform1iARB(usedShader->FindUniform("texture2"), 2);
 
-	paramId = m_shader.FindUniform("alpha");
-	m_extensions.glUniform1fARB(paramId, alphaNoisesTexture);
+	m_extensions.glUniform1fARB(usedShader->FindUniform("alpha"), alphaNoisesTexture);
+	m_extensions.glUniform1fARB(usedShader->FindUniform("imgFactor"), alphaImageTexture);
+	m_extensions.glUniform1fARB(usedShader->FindUniform("velocity"), this->velocity);
+	m_extensions.glUniform1fARB(usedShader->FindUniform("velocityScale"), this->velocityScale);
 
-	paramId = m_shader.FindUniform("imgFactor");
-	m_extensions.glUniform1fARB(paramId, alphaImageTexture);
-
-	paramId = m_shader.FindUniform("velocity");
-	m_extensions.glUniform1fARB(paramId, this->velocity);
-
-	paramId = m_shader.FindUniform("velocityScale");
-	m_extensions.glUniform1fARB(paramId, this->velocityScale);
+	m_extensions.glUniform1fARB(usedShader->FindUniform("dx"), 1.0f / (float)Texture.Width);
+	m_extensions.glUniform1fARB(usedShader->FindUniform("dy"), 1.0f / (float)Texture.Height);
 
 	m_extensions.glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, srcTexture);
@@ -328,7 +355,7 @@ DWORD FFGLFlows::ProcessOpenGL(ProcessOpenGLStruct *pGL)
 
 	//unbind the input texture
 	glBindTexture(GL_TEXTURE_2D, 0);
-	m_shader.UnbindShader();
+	usedShader->UnbindShader();
 
 	m_extensions.glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, systemCurrentFbo);
 
