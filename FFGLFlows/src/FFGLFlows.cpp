@@ -21,6 +21,7 @@ static CFFGLPluginInfo PluginInfo(
 
 
 
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 //  Constructor and destructor
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -31,33 +32,48 @@ FFGLFlows::FFGLFlows() :CFreeFrameGLPlugin()
 	SetMinInputs(1);
 	SetMaxInputs(1);
 
-	parameterDefinitions = new std::map<int, ParamDefinition>{
+	parameterDefinitions = new std::map<int, ParamDefinition>
+	{
+		{ (int)ParamNames::FUNC_DEF, ParamDefinition{ "Field def", FF_TYPE_TEXT, nullptr} },
 		{ (int)ParamNames::NOISE_FACTOR, ParamDefinition{ "Noise factor", FF_TYPE_STANDARD, &this->alphaNoisesTexture } },
 		{ (int)ParamNames::IMG_BLENDING_FACTOR, ParamDefinition{ "Img fraction", FF_TYPE_STANDARD, &this->alphaImageTexture } },
 		{ (int)ParamNames::NOISES_TEXTURES_COUNT, ParamDefinition{ "Noises count", FF_TYPE_STANDARD, &this->noiseTexturesCountFactor } },
 		{ (int)ParamNames::NOISES_SCALE, ParamDefinition{ "Noises scale", FF_TYPE_STANDARD, &this->noiseDimScale } },
-		{ (int)ParamNames::OPERATOR_TYPE, ParamDefinition{ "Operator type", FF_TYPE_STANDARD, &this->operatorTypeFactor } },
-
-		{ (int)ParamNames::VELOCITY, ParamDefinition{ "Velosity", FF_TYPE_STANDARD, &this->velocity } },
-		{ (int)ParamNames::VELOCITY_SCALE, ParamDefinition{ "Velosity Scale", FF_TYPE_STANDARD, &this->velocityScale } },
+		{ (int)ParamNames::OPERATOR_TYPE, ParamDefinition{ "Operator type", FF_TYPE_STANDARD, &this->operatorTypeFactor } },	
 
 		{ (int)ParamNames::XFACTOR, ParamDefinition{ "X Factor", FF_TYPE_STANDARD, &this->xFactor } },
 		{ (int)ParamNames::YFACTOR, ParamDefinition{ "Y Factor", FF_TYPE_STANDARD, &this->yFactor } },
 
 		{ (int)ParamNames::XSHIFT, ParamDefinition{ "X Shift", FF_TYPE_STANDARD, &this->xShift } },
-		{ (int)ParamNames::YSHIFT, ParamDefinition{ "Y Shift", FF_TYPE_STANDARD, &this->yShift } }
+		{ (int)ParamNames::YSHIFT, ParamDefinition{ "Y Shift", FF_TYPE_STANDARD, &this->yShift } },
+
+		{ (int)ParamNames::VELOCITY, ParamDefinition{ "Velosity", FF_TYPE_STANDARD, &this->velocity } },
+		{ (int)ParamNames::VELOCITY_SCALE, ParamDefinition{ "Velosity Scale", FF_TYPE_STANDARD, &this->velocityScale } }
+
+		
 	};
+
+	char* emptyStr = "";
+	//SetParamInfo((int)ParamNames::FUNC_DEF, "Function definition", FF_TYPE_STANDARD, &this->opertorCode);
 
 	for (auto param : *parameterDefinitions)
 	{
 		auto value = param.second;
-		SetParamInfo(param.first, value.paramName.c_str(), value.paramType, value.valueStorage);
+		if (value.paramType == FF_TYPE_STANDARD)
+		{
+			SetParamInfo(param.first, value.paramName.c_str(), value.paramType, value.floatValueStorage);
+		} 
+		else if (value.paramType == FF_TYPE_TEXT)
+		{
+			SetParamInfo(param.first, value.paramName.c_str() , FF_TYPE_TEXT, this->fieldCode.c_str());
+		}
+
 	}
 }
 
 FFGLFlows::~FFGLFlows()
 {
-	parameterDefinitions->clear();
+	parameterDefinitions->clear();	
 	delete parameterDefinitions;
 }
 
@@ -102,7 +118,12 @@ DWORD FFGLFlows::InitGL(const FFGLViewportStruct *vp)
 
 	vec2 getField()
 	{
+		vec2 coords = gl_TexCoord[2].st;
 		vec2 field = vec2(0.0);
+
+		field.x = step(0.5, coords.x);
+		field.y = 0.1;
+
 		return field;
 	}
 	
@@ -303,6 +324,11 @@ DWORD FFGLFlows::ProcessOpenGL(ProcessOpenGLStruct *pGL)
 
 	FFGLShader* usedShader = this->operatorTypeFactor > 0.5 ? (&directFieldShader) : (&sobelFieldShader);
 
+	if (this->operatorTypeFactor == 0)
+	{
+		usedShader = &analyticFieldShader;
+	}
+
 	usedShader->BindShader();
 	
 	m_extensions.glUniform1iARB(usedShader->FindUniform("texture0"), 0);
@@ -501,9 +527,15 @@ DWORD FFGLFlows::GetParameter(DWORD dwIndex)
 	auto result = parameterDefinitions->find(dwIndex);
 
 	if (result != parameterDefinitions->end())
-	{
-		*((float *)(unsigned)(&dwRet)) = *(result->second.valueStorage);
-		return dwRet;
+	{	
+		if (result->first == (int)ParamNames::FUNC_DEF)
+		{
+		}
+		else
+		{
+			*((float *)(unsigned)(&dwRet)) = *(result->second.floatValueStorage);
+			return dwRet;
+		}
 	}
 
 	return FF_FAIL;
@@ -514,25 +546,38 @@ DWORD FFGLFlows::SetParameter(const SetParameterStruct* pParam)
 {	
 	if (pParam != NULL)
 	{
-
-		float newValue = *((float *)(unsigned)&(pParam->NewParameterValue));
-
 		auto result = parameterDefinitions->find(pParam->ParameterNumber);
 
 		if (result != parameterDefinitions->end())
 		{
-			if (newValue != *(result->second.valueStorage))
-			{
-				*(result->second.valueStorage) = newValue;
-
-				if (pParam->ParameterNumber == (int)ParamNames::NOISES_TEXTURES_COUNT ||
-					pParam->ParameterNumber == (int)ParamNames::NOISES_SCALE)
+		
+			if (result->first == (int)ParamNames::FUNC_DEF)
+			{		
+				if (strlen((char*)pParam->NewParameterValue) > 0)
 				{
-					this->DeleteNoiseTextures();
-					auto newNtexCount = mulFtoI(noiseTexturesCountFactor, maxNoiseTexturesAmount);
-					this->ntexCount = newNtexCount == 0 ? 1 : newNtexCount;
+					if (this->fieldCode.compare((char*)pParam->NewParameterValue) != 0)
+					{
+						this->fieldCode.assign((char*)pParam->NewParameterValue);
+					}
 				}
-			}			
+			}
+			else
+			{
+				float newValue = *((float *)(unsigned)&(pParam->NewParameterValue));
+
+				if (newValue != *(result->second.floatValueStorage))
+				{
+					*(result->second.floatValueStorage) = newValue;
+
+					if (pParam->ParameterNumber == (int)ParamNames::NOISES_TEXTURES_COUNT ||
+						pParam->ParameterNumber == (int)ParamNames::NOISES_SCALE)
+					{
+						this->DeleteNoiseTextures();
+						auto newNtexCount = mulFtoI(noiseTexturesCountFactor, maxNoiseTexturesAmount);
+						this->ntexCount = newNtexCount == 0 ? 1 : newNtexCount;
+					}
+				}
+			}
 		}
 		else
 		{

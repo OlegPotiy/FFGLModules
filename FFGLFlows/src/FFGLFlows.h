@@ -8,6 +8,7 @@
 #include <string>
 #include <math.h>
 #include <map>
+#include <memory>
 
 
 
@@ -16,17 +17,19 @@
 
 enum class ParamNames : int
 {
+	FUNC_DEF,
 	NOISE_FACTOR,
 	IMG_BLENDING_FACTOR,
 	NOISES_TEXTURES_COUNT,
 	NOISES_SCALE,
-	OPERATOR_TYPE,
+	OPERATOR_TYPE,	
 	XFACTOR,
 	YFACTOR,
 	XSHIFT,
 	YSHIFT,
 	VELOCITY,
-	VELOCITY_SCALE,
+	VELOCITY_SCALE
+	
 };
 
 struct ParamDefinition
@@ -34,7 +37,7 @@ struct ParamDefinition
 public:
 	std::string paramName;
 	DWORD		paramType;
-	float*		valueStorage;
+	float*		floatValueStorage;		
 };
 
 
@@ -73,7 +76,7 @@ protected:
 
 private:
 
-	class FBOPair 
+	class FBOPair
 	{
 	public:
 		GLuint evenBufferId;
@@ -81,7 +84,7 @@ private:
 
 		GLuint evenTextureId;
 		GLuint oddTextureId;
-		
+
 		bool isEven;
 
 	} *fbos;
@@ -99,15 +102,17 @@ public:
 	FBOPair* CreateFBO(const FFGLViewportStruct *vp);
 
 private:
-	
+
 	FFGLExtensions m_extensions;
 
 	FFGLShader analyticFieldShader;
 	FFGLShader sobelFieldShader;
 	FFGLShader directFieldShader;
 
-	std::map<int, ParamDefinition>* parameterDefinitions;
-	
+	std::map<int, ParamDefinition>* parameterDefinitions{ nullptr };
+
+		
+
 
 
 	GLfloat alphaNoisesTexture{ 0.5f };
@@ -119,20 +124,22 @@ private:
 	float yShift{ 0.0f };
 
 	float velocity{ 0.5f };
-	float velocityScale{ 0.5f };	
+	float velocityScale{ 0.5f };
 	float noiseDimScale{ 0.5f };
 	float noiseTexturesCountFactor{ 0.5f };
 	float operatorTypeFactor{ 0.5 };
+	
+	std::string fieldCode{ "sin(x) + cos(y)" };
 
 	int ntexCount = mulFtoI(noiseTexturesCountFactor, maxNoiseTexturesAmount);
 
-	
+
 
 
 	GLuint maxHorisontalNoiseDim;
 	GLuint maxVerticalNoiseDim;
 
-	
+
 	const int maxNoiseTexturesAmount = 256;
 
 	int iCounter = 0;
@@ -141,7 +148,7 @@ private:
 	GLuint *noiseTexturesIds = nullptr;
 	GLuint fieldTextureId = 0;
 
-	
+
 	bool IsFirstFrame = true;
 
 
@@ -149,12 +156,12 @@ private:
 	GLuint renderedTexture;
 
 
-	
-	
+
+
 
 	void DeleteNoiseTextures();
 	void CreateTextures(int width, int height, int texNum);
-	
+
 };
 
 
