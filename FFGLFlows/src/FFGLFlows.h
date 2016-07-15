@@ -93,7 +93,8 @@ private:
 	std::string* vertexShaderCode;
 
 	std::string* fscUniform;
-	std::string* fscAlnalytic;
+	std::string* fscAlnalyticStart;
+	std::string* fscAlnalyticEnd;
 	std::string* fscSobel;
 	std::string* fscDirect;
 	std::string* fscAdvectionFunc;
@@ -129,7 +130,7 @@ private:
 	float noiseTexturesCountFactor{ 0.5f };
 	float operatorTypeFactor{ 0.5 };
 	
-	std::string fieldCode{ "sin(x) + cos(y)" };
+	std::string fieldCode{ "vec2(0.1,y)"};
 
 	int ntexCount = mulFtoI(noiseTexturesCountFactor, maxNoiseTexturesAmount);
 

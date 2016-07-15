@@ -19,7 +19,11 @@ static CFFGLPluginInfo PluginInfo(
 	);
 
 
-
+std::string ShaderCodeConcat(std::string* fscUniform, std::string* fscFuncCode, std::string* fieldCode, std::string* fscAdvectionFunc)
+{
+	std::string analyticShaderCode{ *fscUniform + *fscFuncCode + ((fieldCode == nullptr) ? "" : *fieldCode) + "; return field;}" + *fscAdvectionFunc };
+	return analyticShaderCode;
+}
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -114,20 +118,17 @@ DWORD FFGLFlows::InitGL(const FFGLViewportStruct *vp)
 	);
 
 	// Analytic field operator
-	this->fscAlnalytic = STRINGIFY(
+	this->fscAlnalyticStart = STRINGIFY(
 
 	vec2 getField()
 	{
-		vec2 coords = gl_TexCoord[2].st;
-		vec2 field = vec2(0.0);
+		vec2 coords = 2*(gl_TexCoord[2].st - 0.5);
+		float x = coords.x;
+		float y = coords.y;
+		vec2 field = vec2(0.0);		
+		field = 
+	);	
 
-		field.x = step(0.5, coords.x);
-		field.y = 0.1;
-
-		return field;
-	}
-	
-	);
 
 	// 3x3 sobel operator
 	this->fscSobel = STRINGIFY(
@@ -225,15 +226,16 @@ DWORD FFGLFlows::InitGL(const FFGLViewportStruct *vp)
 	string directShaderCode{ *(this->fscUniform) + *(this->fscDirect) + *(this->fscAdvectionFunc) };
 	directFieldShader.Compile(this->vertexShaderCode->c_str(), directShaderCode.c_str());
 
-	string analyticShaderCode{ *(this->fscUniform) + *(this->fscAlnalytic) + *(this->fscAdvectionFunc) };
+	//string analyticShaderCode{ *(this->fscUniform) + *(this->fscAlnalyticStart) + this->fieldCode + "; return field;}" + *(this->fscAdvectionFunc) };
+	auto analyticShaderCode = ShaderCodeConcat(this->fscUniform, this->fscAlnalyticStart, &this->fieldCode, this->fscAdvectionFunc);
 	analyticFieldShader.Compile(this->vertexShaderCode->c_str(), analyticShaderCode.c_str());
 
-	delete this->vertexShaderCode;
-	delete this->fscUniform;
-	delete this->fscAlnalytic;
-	delete this->fscDirect;
-	delete this->fscSobel;
-	delete this->fscAdvectionFunc;
+	//delete this->vertexShaderCode;
+	//delete this->fscUniform;
+	//delete this->fscAlnalyticStart;
+	//delete this->fscDirect;
+	//delete this->fscSobel;
+	//delete this->fscAdvectionFunc;
 
 	this->fbos = CreateFBO(vp);
 	if (this->fbos == nullptr)
@@ -244,6 +246,8 @@ DWORD FFGLFlows::InitGL(const FFGLViewportStruct *vp)
 
 	return FF_SUCCESS;
 }
+
+
 
 DWORD FFGLFlows::DeInitGL()
 {
@@ -558,6 +562,9 @@ DWORD FFGLFlows::SetParameter(const SetParameterStruct* pParam)
 					if (this->fieldCode.compare((char*)pParam->NewParameterValue) != 0)
 					{
 						this->fieldCode.assign((char*)pParam->NewParameterValue);
+
+						auto analyticShaderCode = ShaderCodeConcat(this->fscUniform, this->fscAlnalyticStart, &this->fieldCode, this->fscAdvectionFunc);
+						analyticFieldShader.Compile(this->vertexShaderCode->c_str(), analyticShaderCode.c_str());
 					}
 				}
 			}
