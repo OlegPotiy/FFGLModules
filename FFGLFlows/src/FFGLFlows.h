@@ -9,7 +9,7 @@
 #include <math.h>
 #include <map>
 #include <memory>
-
+#include <vector>
 
 
 #define STRINGIFY( expr ) new std::string(#expr)
@@ -147,6 +147,8 @@ private:
 
 	GLuint *mainTextureId = nullptr;
 	GLuint *noiseTexturesIds = nullptr;
+	GLubyte* patterns = nullptr;
+
 	GLuint fieldTextureId = 0;
 
 
@@ -161,7 +163,9 @@ private:
 
 
 	void DeleteNoiseTextures();
+	
 	void CreateTextures(int width, int height, int texNum);
+	void CreateNoises();
 
 };
 

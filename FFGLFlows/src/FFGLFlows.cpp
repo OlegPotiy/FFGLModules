@@ -254,7 +254,8 @@ DWORD FFGLFlows::DeInitGL()
 
 	DeleteNoiseTextures();
 
-
+	if (this->patterns != nullptr)
+		delete this->patterns;
 
 	return FF_SUCCESS;
 }
@@ -288,11 +289,12 @@ DWORD FFGLFlows::ProcessOpenGL(ProcessOpenGLStruct *pGL)
 	GLuint dstRenderBuffer;
 	GLuint dstTexture;
 
-	if (this->noiseTexturesIds == NULL)
+	if (this->noiseTexturesIds == nullptr)
+	{		
 		this->CreateTextures(this->noiseDimScale * this->maxHorisontalNoiseDim,
 			this->noiseDimScale * this->maxVerticalNoiseDim,
 			this->ntexCount);
-
+	}
 
 	if (fbos->isEven)
 	{
@@ -482,45 +484,68 @@ FFGLFlows::FBOPair* FFGLFlows::CreateFBO(const FFGLViewportStruct *viewportStruc
 
 void FFGLFlows::DeleteNoiseTextures()
 {
-	if (this->noiseTexturesIds != NULL)
+	if (this->noiseTexturesIds != nullptr)
 	{
 		glDeleteTextures(this->ntexCount, this->noiseTexturesIds);
 		delete this->noiseTexturesIds;
-		this->noiseTexturesIds = NULL;
+		this->noiseTexturesIds = nullptr;
 	}
+}
+
+void FFGLFlows::CreateNoises()
+{	
+	const int patternSize{ (int)(this->maxVerticalNoiseDim * this->maxHorisontalNoiseDim) };
+	
+	this->patterns = new GLubyte[this->maxNoiseTexturesAmount * patternSize];
+
+	GLubyte lut[256];
+	for (int i = 0; i < 256; i++) lut[i] = i < 127 ? 0 : 255;
+	
+	GLubyte* phase = new GLubyte[patternSize];
+	
+	for (int i = 0; i < patternSize; i++)
+		phase[i] = rand() % 256;
+
+
+	for (int i = 0; i < this->maxNoiseTexturesAmount; i++)
+	{
+		int arg{ i * 256 / this->maxNoiseTexturesAmount };
+		int offset{ i * patternSize };
+
+		for (int j = 0; j < patternSize; j++)
+		{
+			patterns[j + offset] = lut[(arg + phase[j]) % 255];
+		};
+	}
+
+	delete phase;	
 }
 
 void FFGLFlows::CreateTextures(int width, int height, int texNum)
 {
-	int lut[256];
-	int *phase = new int[width * height];
-	GLubyte *pat = new GLubyte[width * height];
-	this->noiseTexturesIds = new GLuint[texNum];
+	const int patternSize{ (int)(this->maxVerticalNoiseDim * this->maxHorisontalNoiseDim) };
 
+	if (this->patterns == nullptr)
+	{
+		CreateNoises();
+	}
 
-	int i, k, t;
-
-	for (i = 0; i < 256; i++) lut[i] = i < 127 ? 0 : 255;
-	for (i = 0; i < height * width; i++)
-		phase[i] = rand() % 256;
+	if (this->noiseTexturesIds == nullptr)
+	{
+		this->noiseTexturesIds = new GLuint[texNum];
+	}
 
 	glGenTextures(texNum, this->noiseTexturesIds);
 
-	for (k = 0; k < texNum; k++)
+	for (int i = 0; i < texNum; i++)
 	{
-		t = k * 256 / texNum;
-		for (i = 0; i < width*height; i++)
-			pat[i] = lut[(t + phase[i]) % 255];
+		int offset{ i * patternSize };
 
-		glBindTexture(GL_TEXTURE_2D, this->noiseTexturesIds[k]);
+		glBindTexture(GL_TEXTURE_2D, this->noiseTexturesIds[i]);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_LUMINANCE8, width, height, 0, GL_LUMINANCE, GL_UNSIGNED_BYTE, pat);
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_LUMINANCE8, width, height, 0, GL_LUMINANCE, GL_UNSIGNED_BYTE, &(this->patterns[offset]));
 	}
-
-	delete phase;
-	delete pat;
-
 }
 
 
