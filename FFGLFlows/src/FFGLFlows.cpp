@@ -113,7 +113,7 @@ DWORD FFGLFlows::InitGL(const FFGLViewportStruct *vp)
 	uniform float velocity;
 	uniform float velocityScale;
 
-	
+	uniform float noiseScale;	
 
 	);
 
@@ -156,23 +156,12 @@ DWORD FFGLFlows::InitGL(const FFGLViewportStruct *vp)
 		gradient.y = (z7 + 2 * z8 + z9) - (z1 + 2 * z2 + z3);
 		gradient.x = -(z3 + 2 * z6 + z9) + (z1 + 2 * z4 + z7);
 
-		//vec4 zz1 = vec2(horizontalStep, verticalStep);
-
 		return gradient;
-
-		/*		
-		isInsideOfArea = (z1 == z2) && (z2 == z3) && (z3 == z4) && (z4 == z6) && (z6 == z7) && (z7 == z8) && (z8 == z9);
-		if (!isInsideOfArea) {
-			return gradient.xy;
-		}
-		else {
-			return vec2(0.5) - texCoords;
-		}*/
 	}
 
 	);
 
-	// Get field direction from image 
+	// Get field direction from the image itself (through the colour-to-value mapping)
 	this->fscDirect = STRINGIFY(
 
 	vec2  getField()
@@ -199,7 +188,7 @@ DWORD FFGLFlows::InitGL(const FFGLViewportStruct *vp)
 
 		vec2 samplerCoord = texCoord - field;
 		vec4 srcColor = texture2D(texture0, samplerCoord);
-		vec4 noiseColor = texture2D(texture1, vec2(texCoord.s, texCoord.t));
+		vec4 noiseColor = texture2D(texture1, 0.5*vec2(1-noiseScale) + noiseScale * texCoord);
 		gl_FragColor = (1 - alpha) * (((1 - imgFactor) * srcColor) + (imgFactor * imgColor)) + alpha * noiseColor;
 	}
 	);
@@ -243,6 +232,8 @@ DWORD FFGLFlows::InitGL(const FFGLViewportStruct *vp)
 
 	maxHorisontalNoiseDim = vp->width;
 	maxVerticalNoiseDim = vp->height;
+
+	
 
 	return FF_SUCCESS;
 }
@@ -289,12 +280,7 @@ DWORD FFGLFlows::ProcessOpenGL(ProcessOpenGLStruct *pGL)
 	GLuint dstRenderBuffer;
 	GLuint dstTexture;
 
-	if (this->noiseTexturesIds == nullptr)
-	{		
-		this->CreateTextures(this->noiseDimScale * this->maxHorisontalNoiseDim,
-			this->noiseDimScale * this->maxVerticalNoiseDim,
-			this->ntexCount);
-	}
+		
 
 	if (fbos->isEven)
 	{
@@ -323,6 +309,8 @@ DWORD FFGLFlows::ProcessOpenGL(ProcessOpenGLStruct *pGL)
 	glEnable(GL_TEXTURE_2D);
 
 
+	CreateTextures();
+
 	// set rendering destination to FBO
 	m_extensions.glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, dstRenderBuffer);
 	glClear(GL_COLOR_BUFFER_BIT);
@@ -341,10 +329,12 @@ DWORD FFGLFlows::ProcessOpenGL(ProcessOpenGLStruct *pGL)
 	m_extensions.glUniform1iARB(usedShader->FindUniform("texture1"), 1);
 	m_extensions.glUniform1iARB(usedShader->FindUniform("texture2"), 2);
 
-	m_extensions.glUniform1fARB(usedShader->FindUniform("alpha"), alphaNoisesTexture);
+	m_extensions.glUniform1fARB(usedShader->FindUniform("alpha"), 0.1*alphaNoisesTexture);
 	m_extensions.glUniform1fARB(usedShader->FindUniform("imgFactor"), alphaImageTexture);
 	m_extensions.glUniform1fARB(usedShader->FindUniform("velocity"), this->velocity);
 	m_extensions.glUniform1fARB(usedShader->FindUniform("velocityScale"), this->velocityScale);
+	m_extensions.glUniform1fARB(usedShader->FindUniform("noiseScale"), this->noiseDimScale);
+	
 
 	m_extensions.glUniform1fARB(usedShader->FindUniform("dx"), 1.0f / (float)Texture.Width);
 	m_extensions.glUniform1fARB(usedShader->FindUniform("dy"), 1.0f / (float)Texture.Height);
@@ -429,7 +419,7 @@ DWORD FFGLFlows::ProcessOpenGL(ProcessOpenGLStruct *pGL)
 
 
 	this->iCounter++;
-	this->iCounter %= this->ntexCount;
+	this->iCounter %= this->maxNoiseTexturesAmount;
 
 	return FF_SUCCESS;
 }
@@ -484,6 +474,7 @@ FFGLFlows::FBOPair* FFGLFlows::CreateFBO(const FFGLViewportStruct *viewportStruc
 
 void FFGLFlows::DeleteNoiseTextures()
 {
+	
 	if (this->noiseTexturesIds != nullptr)
 	{
 		glDeleteTextures(this->ntexCount, this->noiseTexturesIds);
@@ -521,7 +512,7 @@ void FFGLFlows::CreateNoises()
 	delete phase;	
 }
 
-void FFGLFlows::CreateTextures(int width, int height, int texNum)
+void FFGLFlows::CreateTextures()
 {
 	const int patternSize{ (int)(this->maxVerticalNoiseDim * this->maxHorisontalNoiseDim) };
 
@@ -532,20 +523,21 @@ void FFGLFlows::CreateTextures(int width, int height, int texNum)
 
 	if (this->noiseTexturesIds == nullptr)
 	{
-		this->noiseTexturesIds = new GLuint[texNum];
+		this->noiseTexturesIds = new GLuint[maxNoiseTexturesAmount];
+		
+		glGenTextures(maxNoiseTexturesAmount, this->noiseTexturesIds);
+
+		for (int i = 0; i < maxNoiseTexturesAmount; i++)
+		{
+			int offset{ i * patternSize };
+
+			glBindTexture(GL_TEXTURE_2D, this->noiseTexturesIds[i]);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+			glTexImage2D(GL_TEXTURE_2D, 0, GL_LUMINANCE8, this->maxHorisontalNoiseDim, this->maxVerticalNoiseDim, 0, GL_LUMINANCE, GL_UNSIGNED_BYTE, &(this->patterns[offset]));
+		}
 	}
-
-	glGenTextures(texNum, this->noiseTexturesIds);
-
-	for (int i = 0; i < texNum; i++)
-	{
-		int offset{ i * patternSize };
-
-		glBindTexture(GL_TEXTURE_2D, this->noiseTexturesIds[i]);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_LUMINANCE8, width, height, 0, GL_LUMINANCE, GL_UNSIGNED_BYTE, &(this->patterns[offset]));
-	}
+	
 }
 
 
@@ -600,14 +592,6 @@ DWORD FFGLFlows::SetParameter(const SetParameterStruct* pParam)
 				if (newValue != *(result->second.floatValueStorage))
 				{
 					*(result->second.floatValueStorage) = newValue;
-
-					if (pParam->ParameterNumber == (int)ParamNames::NOISES_TEXTURES_COUNT ||
-						pParam->ParameterNumber == (int)ParamNames::NOISES_SCALE)
-					{
-						this->DeleteNoiseTextures();
-						auto newNtexCount = mulFtoI(noiseTexturesCountFactor, maxNoiseTexturesAmount);
-						this->ntexCount = newNtexCount == 0 ? 1 : newNtexCount;
-					}
 				}
 			}
 		}

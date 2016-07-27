@@ -104,6 +104,8 @@ public:
 
 private:
 
+	const int maxNoiseTexturesAmount = 256;
+
 	FFGLExtensions m_extensions;
 
 	FFGLShader analyticFieldShader;
@@ -141,7 +143,7 @@ private:
 	GLuint maxVerticalNoiseDim;
 
 
-	const int maxNoiseTexturesAmount = 256;
+	
 
 	int iCounter = 0;
 
@@ -164,7 +166,7 @@ private:
 
 	void DeleteNoiseTextures();
 	
-	void CreateTextures(int width, int height, int texNum);
+	void CreateTextures();
 	void CreateNoises();
 
 };
