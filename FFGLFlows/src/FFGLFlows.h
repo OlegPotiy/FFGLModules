@@ -142,16 +142,11 @@ private:
 	GLuint maxHorisontalNoiseDim;
 	GLuint maxVerticalNoiseDim;
 
-
+	GLubyte* patterns = nullptr;
 	
 
-	int iCounter = 0;
-
-	GLuint *mainTextureId = nullptr;
-	GLuint *noiseTexturesIds = nullptr;
-	GLubyte* patterns = nullptr;
-
-	GLuint fieldTextureId = 0;
+	int currentTexId{ 0 };
+	std::vector<GLuint> texIds;
 
 
 	bool IsFirstFrame = true;
@@ -165,9 +160,9 @@ private:
 
 
 	void DeleteNoiseTextures();
-	
-	void CreateTextures();
-	void CreateNoises();
+	void CreateNoises(int patternSize, int patternsCount);
+
+	void EnsureTexturesCreated(int texCount);
 
 };
 

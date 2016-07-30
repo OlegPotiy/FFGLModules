@@ -259,6 +259,8 @@ DWORD FFGLFlows::DeInitGL()
 
 DWORD FFGLFlows::ProcessOpenGL(ProcessOpenGLStruct *pGL)
 {
+	int texCount{ (int)(this->noiseTexturesCountFactor * this->maxNoiseTexturesAmount) };
+	texCount = texCount == 0 ? 1 : texCount;
 
 	if (pGL->numInputTextures < 1)
 		return FF_FAIL;
@@ -308,8 +310,8 @@ DWORD FFGLFlows::ProcessOpenGL(ProcessOpenGLStruct *pGL)
 
 	glEnable(GL_TEXTURE_2D);
 
-
-	CreateTextures();
+	
+	EnsureTexturesCreated(texCount);
 
 	// set rendering destination to FBO
 	m_extensions.glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, dstRenderBuffer);
@@ -343,7 +345,7 @@ DWORD FFGLFlows::ProcessOpenGL(ProcessOpenGLStruct *pGL)
 	glBindTexture(GL_TEXTURE_2D, srcTexture);
 
 	m_extensions.glActiveTexture(GL_TEXTURE1);
-	glBindTexture(GL_TEXTURE_2D, this->noiseTexturesIds[iCounter]);
+	glBindTexture(GL_TEXTURE_2D, this->texIds[currentTexId]);
 
 	m_extensions.glActiveTexture(GL_TEXTURE2);
 	glBindTexture(GL_TEXTURE_2D, Texture.Handle);
@@ -418,8 +420,8 @@ DWORD FFGLFlows::ProcessOpenGL(ProcessOpenGLStruct *pGL)
 	glColor4f(1.f, 1.f, 1.f, 1.f);
 
 
-	this->iCounter++;
-	this->iCounter %= this->maxNoiseTexturesAmount;
+	this->currentTexId++;
+	this->currentTexId %= texCount;
 
 	return FF_SUCCESS;
 }
@@ -474,20 +476,20 @@ FFGLFlows::FBOPair* FFGLFlows::CreateFBO(const FFGLViewportStruct *viewportStruc
 
 void FFGLFlows::DeleteNoiseTextures()
 {
-	
-	if (this->noiseTexturesIds != nullptr)
+	if (this->patterns != nullptr)
 	{
-		glDeleteTextures(this->ntexCount, this->noiseTexturesIds);
-		delete this->noiseTexturesIds;
-		this->noiseTexturesIds = nullptr;
-	}
+		delete this->patterns;
+		this->patterns = nullptr;
+	};
+
+	currentTexId = 0;
+
+	texIds.clear();
 }
 
-void FFGLFlows::CreateNoises()
+void FFGLFlows::CreateNoises(int patternSize, int patternsCount)
 {	
-	const int patternSize{ (int)(this->maxVerticalNoiseDim * this->maxHorisontalNoiseDim) };
-	
-	this->patterns = new GLubyte[this->maxNoiseTexturesAmount * patternSize];
+	this->patterns = new GLubyte[patternsCount * patternSize];
 
 	GLubyte lut[256];
 	for (int i = 0; i < 256; i++) lut[i] = i < 127 ? 0 : 255;
@@ -498,9 +500,9 @@ void FFGLFlows::CreateNoises()
 		phase[i] = rand() % 256;
 
 
-	for (int i = 0; i < this->maxNoiseTexturesAmount; i++)
+	for (int i = 0; i < patternsCount; i++)
 	{
-		int arg{ i * 256 / this->maxNoiseTexturesAmount };
+		int arg{ i * 256 / patternsCount };
 		int offset{ i * patternSize };
 
 		for (int j = 0; j < patternSize; j++)
@@ -512,26 +514,26 @@ void FFGLFlows::CreateNoises()
 	delete phase;	
 }
 
-void FFGLFlows::CreateTextures()
+void FFGLFlows::EnsureTexturesCreated(int texCount)
 {
-	const int patternSize{ (int)(this->maxVerticalNoiseDim * this->maxHorisontalNoiseDim) };
+	const int patternSize{ (int)(this->maxVerticalNoiseDim * this->maxHorisontalNoiseDim) };	
 
 	if (this->patterns == nullptr)
 	{
-		CreateNoises();
+		CreateNoises(patternSize, texCount);
 	}
 
-	if (this->noiseTexturesIds == nullptr)
+	if (texIds.empty())
 	{
-		this->noiseTexturesIds = new GLuint[maxNoiseTexturesAmount];
+		texIds.resize(texCount);
 		
-		glGenTextures(maxNoiseTexturesAmount, this->noiseTexturesIds);
+		glGenTextures(texCount, texIds.data());
 
-		for (int i = 0; i < maxNoiseTexturesAmount; i++)
+		for (int i = 0; i < texCount; i++)
 		{
 			int offset{ i * patternSize };
 
-			glBindTexture(GL_TEXTURE_2D, this->noiseTexturesIds[i]);
+			glBindTexture(GL_TEXTURE_2D, texIds[i]);
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 			glTexImage2D(GL_TEXTURE_2D, 0, GL_LUMINANCE8, this->maxHorisontalNoiseDim, this->maxVerticalNoiseDim, 0, GL_LUMINANCE, GL_UNSIGNED_BYTE, &(this->patterns[offset]));
@@ -591,6 +593,11 @@ DWORD FFGLFlows::SetParameter(const SetParameterStruct* pParam)
 
 				if (newValue != *(result->second.floatValueStorage))
 				{
+					if (result->first == (int)ParamNames::NOISES_TEXTURES_COUNT)
+					{
+						this->DeleteNoiseTextures();
+					}
+
 					*(result->second.floatValueStorage) = newValue;
 				}
 			}
