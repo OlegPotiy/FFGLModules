@@ -34,9 +34,6 @@
     <ClCompile Include="..\FFGL\FFGLShader.cpp" />
     <ClCompile Include="src\FFGLFlows.cpp" />
   </ItemGroup>
-  <ItemGroup>
-    <None Include="ClassDiagram.cd" />
-  </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{74AE03F6-083C-4146-9251-0DAAF88A799D}</ProjectGuid>
     <RootNamespace>FFGLFlows</RootNamespace>

@@ -15,6 +15,9 @@
 #define STRINGIFY( expr ) new std::string(#expr)
 #define mulFtoI(v1, v2) (int)(((float)(v1))*((float)(v2)))
 
+/* 
+	Parameters codes
+*/
 enum class ParamNames : int
 {
 	FUNC_DEF,
@@ -39,7 +42,6 @@ public:
 	DWORD		paramType;
 	float*		floatValueStorage;		
 };
-
 
 class FFGLFlows : public CFreeFrameGLPlugin
 {
@@ -104,15 +106,15 @@ public:
 
 private:
 
-	const int maxNoiseTexturesAmount = 256;
+	
 
 	FFGLExtensions m_extensions;
 
-	FFGLShader analyticFieldShader;
-	FFGLShader sobelFieldShader;
-	FFGLShader directFieldShader;
+	FFGLShader analyticShader;
+	FFGLShader sobelShader;
+	FFGLShader directShader;
 
-	std::map<int, ParamDefinition>* parameterDefinitions{ nullptr };
+	std::map<int, ParamDefinition> parameterDefinitions;
 
 		
 
@@ -134,17 +136,14 @@ private:
 	
 	std::string fieldCode{ "vec2(0.1,y)"};
 
-	int ntexCount = mulFtoI(noiseTexturesCountFactor, maxNoiseTexturesAmount);
 
-
-
-
-	GLuint maxHorisontalNoiseDim;
-	GLuint maxVerticalNoiseDim;
-
-	GLubyte* patterns = nullptr;
+	GLuint noiseWidth;
 	
+	GLuint noiseHeight;
 
+	
+	
+	
 	int currentTexId{ 0 };
 	std::vector<GLuint> texIds;
 
@@ -156,13 +155,8 @@ private:
 	GLuint renderedTexture;
 
 
-
-
-
-	void DeleteNoiseTextures();
-	void CreateNoises(int patternSize, int patternsCount);
-
-	void EnsureTexturesCreated(int texCount);
+	void DeleteNoiseTextures();	
+	void EnsureTexturesCreated();
 
 };
 

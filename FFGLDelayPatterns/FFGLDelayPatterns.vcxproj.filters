@@ -1,0 +1,81 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="FFGL">
+      <UniqueIdentifier>{7fec7c2b-1164-47aa-be75-369604574f01}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src">
+      <UniqueIdentifier>{2b0a956c-38bf-4c83-8420-aa88e9bcaecf}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\FFGL\FFGL.cpp">
+      <Filter>FFGL</Filter>
+    </ClCompile>
+    <ClCompile Include="..\FFGL\FFGLExtensions.cpp">
+      <Filter>FFGL</Filter>
+    </ClCompile>
+    <ClCompile Include="..\FFGL\FFGLFBO.cpp">
+      <Filter>FFGL</Filter>
+    </ClCompile>
+    <ClCompile Include="..\FFGL\FFGLPluginInfo.cpp">
+      <Filter>FFGL</Filter>
+    </ClCompile>
+    <ClCompile Include="..\FFGL\FFGLPluginInfoData.cpp">
+      <Filter>FFGL</Filter>
+    </ClCompile>
+    <ClCompile Include="..\FFGL\FFGLPluginManager.cpp">
+      <Filter>FFGL</Filter>
+    </ClCompile>
+    <ClCompile Include="..\FFGL\FFGLPluginSDK.cpp">
+      <Filter>FFGL</Filter>
+    </ClCompile>
+    <ClCompile Include="..\FFGL\FFGLShader.cpp">
+      <Filter>FFGL</Filter>
+    </ClCompile>
+    <ClCompile Include="src\FFGLDelays.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\FFGL\FFGLUtils.cpp">
+      <Filter>FFGL</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\FFGL\FFGL.h">
+      <Filter>FFGL</Filter>
+    </ClInclude>
+    <ClInclude Include="..\FFGL\FFGLExtensions.h">
+      <Filter>FFGL</Filter>
+    </ClInclude>
+    <ClInclude Include="..\FFGL\FFGLFBO.h">
+      <Filter>FFGL</Filter>
+    </ClInclude>
+    <ClInclude Include="..\FFGL\FFGLLib.h">
+      <Filter>FFGL</Filter>
+    </ClInclude>
+    <ClInclude Include="..\FFGL\FFGLPluginInfo.h">
+      <Filter>FFGL</Filter>
+    </ClInclude>
+    <ClInclude Include="..\FFGL\FFGLPluginManager.h">
+      <Filter>FFGL</Filter>
+    </ClInclude>
+    <ClInclude Include="..\FFGL\FFGLPluginManager_inl.h">
+      <Filter>FFGL</Filter>
+    </ClInclude>
+    <ClInclude Include="..\FFGL\FFGLPluginSDK.h">
+      <Filter>FFGL</Filter>
+    </ClInclude>
+    <ClInclude Include="..\FFGL\FFGLShader.h">
+      <Filter>FFGL</Filter>
+    </ClInclude>
+    <ClInclude Include="..\FFGL\FreeFrame.h">
+      <Filter>FFGL</Filter>
+    </ClInclude>
+    <ClInclude Include="src\FFGLDelays.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\FFGL\FFGLUtils.h">
+      <Filter>FFGL</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>
