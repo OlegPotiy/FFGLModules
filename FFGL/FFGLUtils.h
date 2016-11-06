@@ -1,6 +1,8 @@
 #pragma once
 #include "FFGL.h"
+#include "FFGLLib.h"
 #include "FFGLExtensions.h"
+
 
 struct FFGLFrameBuffer
 {
@@ -17,5 +19,6 @@ public:
 
 	static void DeleteFrameBuffer(FFGLFrameBuffer& fb, FFGLExtensions& glExts);
 
+	static void FrameRect(FFGLTexCoords& maxCoords );	
 };
 

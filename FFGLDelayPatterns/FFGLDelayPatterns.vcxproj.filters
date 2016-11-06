@@ -39,6 +39,9 @@
     <ClCompile Include="..\FFGL\FFGLUtils.cpp">
       <Filter>FFGL</Filter>
     </ClCompile>
+    <ClCompile Include="..\FFGL\utils\FFGLParameter.cpp">
+      <Filter>FFGL</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\FFGL\FFGL.h">
@@ -75,6 +78,9 @@
       <Filter>src</Filter>
     </ClInclude>
     <ClInclude Include="..\FFGL\FFGLUtils.h">
+      <Filter>FFGL</Filter>
+    </ClInclude>
+    <ClInclude Include="..\FFGL\utils\FFGLParameter.h">
       <Filter>FFGL</Filter>
     </ClInclude>
   </ItemGroup>

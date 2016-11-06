@@ -126,6 +126,7 @@
     <ClCompile Include="..\FFGL\FFGLPluginSDK.cpp" />
     <ClCompile Include="..\FFGL\FFGLShader.cpp" />
     <ClCompile Include="..\FFGL\FFGLUtils.cpp" />
+    <ClCompile Include="..\FFGL\utils\FFGLParameter.cpp" />
     <ClCompile Include="src\FFGLDelays.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -140,6 +141,7 @@
     <ClInclude Include="..\FFGL\FFGLShader.h" />
     <ClInclude Include="..\FFGL\FFGLUtils.h" />
     <ClInclude Include="..\FFGL\FreeFrame.h" />
+    <ClInclude Include="..\FFGL\utils\FFGLParameter.h" />
     <ClInclude Include="src\FFGLDelays.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

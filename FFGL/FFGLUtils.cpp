@@ -29,3 +29,26 @@ void FFGLUtils::DeleteFrameBuffer(FFGLFrameBuffer& fb, FFGLExtensions& glExts)
 		glExts.glDeleteFramebuffersEXT(1, &fb.bufferId);		
 }
 
+void FFGLUtils::FrameRect(FFGLTexCoords& maxCoords)
+{
+	glBegin(GL_QUADS);
+	
+	//lower left
+	glTexCoord2d(0.0, 0.0);
+	glVertex2f(-1, -1);
+
+	//upper left	
+	glTexCoord2d(0.0, maxCoords.t);
+	glVertex2f(-1, 1);
+
+	//upper right	
+	glTexCoord2d(maxCoords.s, maxCoords.t);
+	glVertex2f(1, 1);
+
+	//lower right
+	glTexCoord2d(maxCoords.s, 0.0);
+	glVertex2f(1, -1);
+
+	glEnd();
+}
+
