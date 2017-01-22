@@ -21,9 +21,19 @@ enum class ParamCodes : int
 };
 
 
+enum Pattern : int
+{
+	VERTICAL_STRIPS,
+	HORIZONTAL_STRIPS,
+	QUAD_NET
+};
+
+
 
 static void HStrip(double lPos, double width, double lTexPos, double texWidth);
 static void VStrip(double lPos, double width, double lTexPos, double texWidth);
+static FFGLTextureStruct GetMultipliers(FFGLTextureStruct textureDesc, int modulesCount);
+
 
 class FFGLDelays : public CFreeFrameGLPlugin
 {
@@ -48,6 +58,15 @@ private:
 
 	inline int GetIndex() { return GetNewest(); }
 	inline int IncIndex() { index = GetOldest(); return index; }
+
+	Pattern GetQuadType()
+	{
+		if (patternCoeff <= 0.33)
+			return VERTICAL_STRIPS;
+		else if (0.33 < patternCoeff <= 0.66)
+			return HORIZONTAL_STRIPS;
+		return QUAD_NET;
+	}
 
 	void processParamsValuesChanges();
 	void reConstructBuffers(const FFGLViewportStruct *vp, int bufferCount);

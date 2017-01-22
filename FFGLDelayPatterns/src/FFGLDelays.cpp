@@ -79,7 +79,7 @@ void FFGLDelays::processParamsValuesChanges()
 	auto numModulesParam = parameterDefinitions.find((int)ParamCodes::NUM_MODULES);
 	modulesAmountCoeff = numModulesParam->second.getFloatStorage();
 
-	auto patternModesParam = parameterDefinitions.find((int)ParamCodes::PATTERN_MODE );
+	auto patternModesParam = parameterDefinitions.find((int)ParamCodes::PATTERN_MODE);
 	patternCoeff = patternModesParam->second.getFloatStorage();
 
 	auto bufferNumberParam = parameterDefinitions.find((int)ParamCodes::CONFIG_BUFFERS_NUMBER);
@@ -90,7 +90,7 @@ void FFGLDelays::processParamsValuesChanges()
 		bufferCount = std::stoi(bufferNumber);
 		reConstructBuffers(viewPoint, bufferCount);
 	}
-	
+
 }
 
 
@@ -101,7 +101,7 @@ void FFGLDelays::reConstructBuffers(const FFGLViewportStruct *vp, int puffers)
 	//Deconstruct buffers first
 	DeInitGL();
 
-	
+
 	for (int i = 0; i < puffers; i++)
 	{
 		auto fb = FFGLUtils::CreateFrameBuffer(viewPoint->width, viewPoint->height, glExts);
@@ -145,31 +145,45 @@ DWORD FFGLDelays::ProcessOpenGL(ProcessOpenGLStruct* pGL)
 
 
 	const int moduleCount{ (int)(2.0f * (1.0 - modulesAmountCoeff) + modulesAmountCoeff * ((float)bufferCount)) };
-	const double stripScale{ ((double)2) / ((double)moduleCount) };
-	const double stripTexScale{ ((double)1) / ((double)moduleCount) };
-	const float fStep {((float)bufferCount) / ((float)(moduleCount - 1))};
+	const double stripGeomWidth{ ((double)2) / ((double)moduleCount) };
+	const double stripTexWigth{ ((double)1) / ((double)moduleCount) };
+	const float fStep{ ((float)bufferCount) / ((float)(moduleCount - 1)) };
 
 	float fIndex = GetOldest();
 
 	double geomPos = -1;
 	double texPos = 0;
 
+	auto quadType = GetQuadType();
+
+	auto dims = (quadType == Pattern::QUAD_NET) ? GetMultipliers(Texture, moduleCount) : FFGLTextureStruct{ 0,0 };
+
 	for (int i = 0; i < moduleCount; i++)
 	{
 		int fbIndex = (i == 0) ? GetOldest() : (i == (moduleCount - 1)) ? GetNewest() : (int)(GetOldest() + ((float)i) * fStep) % bufferCount;
-
 		glBindTexture(GL_TEXTURE_2D, fbos[fbIndex].textureId);
-		if (patternCoeff < 0.5)
-			VStrip(geomPos, stripScale, texPos, stripTexScale);
-		else
-			HStrip(geomPos, stripScale, texPos, stripTexScale);
 
-		geomPos += stripScale;
-		texPos += stripTexScale;
+		switch (quadType)
+		{
+			case VERTICAL_STRIPS:
+				VStrip(geomPos, stripGeomWidth, texPos, stripTexWigth);
+				break;
+			case HORIZONTAL_STRIPS:
+				HStrip(geomPos, stripGeomWidth, texPos, stripTexWigth);
+				break;
+			case QUAD_NET:
+
+				//HStrip(geomPos, stripGeomWidth, texPos, stripTexWigth);
+				break;
+		}
+
+
+		geomPos += stripGeomWidth;
+		texPos += stripTexWigth;
 	};
 
 	IncIndex();
-	
+
 	glDisable(GL_TEXTURE_2D);
 
 	return FF_SUCCESS;
@@ -183,7 +197,7 @@ DWORD	FFGLDelays::SetParameter(const SetParameterStruct* pParam)
 		if (result != parameterDefinitions.end())
 		{
 			if (result->second.getType() == FF_TYPE_STANDARD)
-			{				
+			{
 				result->second.setFloatStorage(*((float *)(unsigned)&(pParam->NewParameterValue)));
 			}
 			else if (result->second.getType() == FF_TYPE_TEXT)
@@ -271,4 +285,36 @@ static void HStrip(double lPos, double width, double lTexPos, double texWidth)
 	glVertex2f(lPos + width, -1);
 
 	glEnd();
+}
+
+static FFGLTextureStruct GetMultipliers(FFGLTextureStruct textureDesc, int modulesCount)
+{
+	const float ratio { (float)textureDesc.HardwareHeight / (float)textureDesc.HardwareWidth };
+
+	DWORD n{ (DWORD)sqrt(modulesCount) };
+	DWORD m{ (DWORD)(ratio * (float)n) };
+
+	DWORD foundN{ 0 };
+	DWORD foundM{ 0 };
+
+	while (n*m <= modulesCount)
+	{
+		foundN = n;
+		foundM = m;
+		m = (DWORD)(ratio * (float)(++n));
+	}
+
+	if ((foundN + 1)*(foundM + 1) <= modulesCount)
+	{
+		return FFGLTextureStruct{ foundN + 1, foundM + 1 };
+	}
+	else if ((foundN + 1) * foundM <= modulesCount)
+	{
+		return FFGLTextureStruct{ foundN + 1, foundM };
+	}
+	else if (foundN * (foundM + 1) <= modulesCount)
+	{
+		return FFGLTextureStruct{ foundN, foundM + 1 };
+	}
+
 }
