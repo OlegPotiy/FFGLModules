@@ -154,33 +154,102 @@ DWORD FFGLDelays::ProcessOpenGL(ProcessOpenGLStruct* pGL)
 	double geomPos = -1;
 	double texPos = 0;
 
-	auto quadType = GetQuadType();
-
-	auto dims = (quadType == Pattern::QUAD_NET) ? GetMultipliers(Texture, moduleCount) : FFGLTextureStruct{ 0,0 };
-
-	for (int i = 0; i < moduleCount; i++)
+	auto quadType{ GetQuadType() };
+	
+	if (quadType == VERTICAL_STRIPS || quadType == HORIZONTAL_STRIPS)
 	{
-		int fbIndex = (i == 0) ? GetOldest() : (i == (moduleCount - 1)) ? GetNewest() : (int)(GetOldest() + ((float)i) * fStep) % bufferCount;
-		glBindTexture(GL_TEXTURE_2D, fbos[fbIndex].textureId);
-
-		switch (quadType)
+		for (int i = 0; i < moduleCount; i++)
 		{
+			int fbIndex = (i == 0) ? GetOldest() : (i == (moduleCount - 1)) ? GetNewest() : (int)(GetOldest() + ((float)i) * fStep) % bufferCount;
+			glBindTexture(GL_TEXTURE_2D, fbos[fbIndex].textureId);
+
+			switch (quadType)
+			{
 			case VERTICAL_STRIPS:
 				VStrip(geomPos, stripGeomWidth, texPos, stripTexWigth);
 				break;
 			case HORIZONTAL_STRIPS:
 				HStrip(geomPos, stripGeomWidth, texPos, stripTexWigth);
 				break;
-			case QUAD_NET:
-
-				//HStrip(geomPos, stripGeomWidth, texPos, stripTexWigth);
-				break;
-		}
-
-
-		geomPos += stripGeomWidth;
-		texPos += stripTexWigth;
+			}
+			geomPos += stripGeomWidth;
+			texPos += stripTexWigth;
+		};
 	};
+
+	if (quadType == QUAD_NET_FROM_LLC || quadType == QUAD_NET_FROM_URC)
+	{
+		int quadIdx{ 0 };
+		auto dims = GetMultipliers(Texture, moduleCount);
+		
+		const float delthaQuadWidth{ 2.0f / ((float)dims.Width) };
+		const float delthaQuadHeight{ 2.0f / ((float)dims.Height) };
+
+		const float delthaTextWidth{ 1.0f / ((float)dims.Width) };
+		const float delthaTextHeight{ 1.0f / ((float)dims.Height) };
+
+		float quadLeftLowerCorner_x{ -1.0f };
+		float quadLeftLowerCorner_y{ (quadType == Pattern::QUAD_NET_FROM_LLC) ? -1.0f : 1.0f - delthaQuadHeight };
+
+		float texLeftLowerCorner_x{ 0.0f };
+		float texLeftLowerCorner_y{ (quadType == Pattern::QUAD_NET_FROM_LLC) ? 0.0f : 1.0f - delthaTextHeight };
+
+
+		for (int i{ 0 }; i < dims.Height; i++)
+		{
+			quadLeftLowerCorner_x = (quadType == QUAD_NET_FROM_LLC) ? -1.0f : 1.0f - delthaQuadWidth;
+			texLeftLowerCorner_x = (quadType == QUAD_NET_FROM_LLC) ? 0.0f : 1.0f - delthaTextWidth;
+			for (int j{ 0 }; j < dims.Width; j++)
+			{
+				int fbIndex = (quadIdx == 0) ? GetOldest() : (quadIdx == (moduleCount - 1)) ? GetNewest() : (int)(GetOldest() + ((float)quadIdx) * fStep) % bufferCount;
+				glBindTexture(GL_TEXTURE_2D, fbos[fbIndex].textureId);
+
+				glBegin(GL_QUADS);
+
+				//lower left
+				glTexCoord2d(texLeftLowerCorner_x, texLeftLowerCorner_y);
+				glVertex2f(quadLeftLowerCorner_x, quadLeftLowerCorner_y);
+
+				//upper left	
+				glTexCoord2d(texLeftLowerCorner_x, texLeftLowerCorner_y + delthaTextHeight);
+				glVertex2f(quadLeftLowerCorner_x, quadLeftLowerCorner_y + delthaQuadHeight);
+
+				//upper right	
+				glTexCoord2d(texLeftLowerCorner_x + delthaTextWidth, texLeftLowerCorner_y + delthaTextHeight);
+				glVertex2f(quadLeftLowerCorner_x + delthaQuadWidth, quadLeftLowerCorner_y + delthaQuadHeight);
+
+				//lower right
+				glTexCoord2d(texLeftLowerCorner_x + delthaTextWidth, texLeftLowerCorner_y);
+				glVertex2f(quadLeftLowerCorner_x + delthaQuadWidth, quadLeftLowerCorner_y);
+
+				glEnd();
+
+				if (quadType == QUAD_NET_FROM_LLC)
+				{
+					quadLeftLowerCorner_x += delthaQuadWidth;
+					texLeftLowerCorner_x += delthaTextWidth;
+				}
+				else
+				{
+					quadLeftLowerCorner_x -= delthaQuadWidth;
+					texLeftLowerCorner_x -= delthaTextWidth;
+				}
+
+				quadIdx++;
+			}
+
+			if (quadType == QUAD_NET_FROM_LLC)
+			{
+				quadLeftLowerCorner_y += delthaQuadHeight;
+				texLeftLowerCorner_y += delthaTextHeight;
+			}
+			else
+			{
+				quadLeftLowerCorner_y -= delthaQuadHeight;
+				texLeftLowerCorner_y -= delthaTextHeight;
+			}
+		}
+	}
 
 	IncIndex();
 
@@ -304,17 +373,24 @@ static FFGLTextureStruct GetMultipliers(FFGLTextureStruct textureDesc, int modul
 		m = (DWORD)(ratio * (float)(++n));
 	}
 
-	if ((foundN + 1)*(foundM + 1) <= modulesCount)
+	auto nextN{ foundN + 1 };
+	auto nextM{ foundM + 1 };
+	
+	if (nextN * nextM <= modulesCount)
 	{
-		return FFGLTextureStruct{ foundN + 1, foundM + 1 };
+		return FFGLTextureStruct{ nextN, nextM };
 	}
-	else if ((foundN + 1) * foundM <= modulesCount)
+	else
 	{
-		return FFGLTextureStruct{ foundN + 1, foundM };
-	}
-	else if (foundN * (foundM + 1) <= modulesCount)
-	{
-		return FFGLTextureStruct{ foundN, foundM + 1 };
-	}
+		auto m1{ nextN * foundM };
+		auto m2{ foundN * nextM };
 
+		if (m1 < m2 && m2 <= modulesCount)
+			return FFGLTextureStruct{ foundN, nextM };
+
+		if (m2 < m1 && m1 <= modulesCount)
+			return FFGLTextureStruct{ nextN, foundM };
+	}
+	
+	return FFGLTextureStruct{ foundN, foundM };
 }

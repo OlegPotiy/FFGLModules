@@ -23,9 +23,11 @@ enum class ParamCodes : int
 
 enum Pattern : int
 {
-	VERTICAL_STRIPS,
+	VERTICAL_STRIPS = 0,
 	HORIZONTAL_STRIPS,
-	QUAD_NET
+	QUAD_NET_FROM_LLC,
+	QUAD_NET_FROM_URC,
+	LAST_ONE
 };
 
 
@@ -61,11 +63,8 @@ private:
 
 	Pattern GetQuadType()
 	{
-		if (patternCoeff <= 0.33)
-			return VERTICAL_STRIPS;
-		else if (0.33 < patternCoeff <= 0.66)
-			return HORIZONTAL_STRIPS;
-		return QUAD_NET;
+		auto ptrn = (Pattern)((int)(patternCoeff * (float)Pattern::LAST_ONE));
+		return (ptrn == Pattern::LAST_ONE) ? QUAD_NET_FROM_URC: ptrn;
 	}
 
 	void processParamsValuesChanges();
