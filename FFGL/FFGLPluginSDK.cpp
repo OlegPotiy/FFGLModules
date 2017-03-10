@@ -22,7 +22,8 @@
 #include <memory.h>
 
 // Buffer used by the default implementation of getParameterDisplay
-static char s_DisplayValue[5];
+static const byte displayValueLength = 10;
+static char s_DisplayValue[displayValueLength];
 
 
 ////////////////////////////////////////////////////////
@@ -30,12 +31,12 @@ static char s_DisplayValue[5];
 ////////////////////////////////////////////////////////
 
 CFreeFrameGLPlugin::CFreeFrameGLPlugin()
-: CFFGLPluginManager()
+	: CFFGLPluginManager()
 {
 
 }
 
-CFreeFrameGLPlugin::~CFreeFrameGLPlugin() 
+CFreeFrameGLPlugin::~CFreeFrameGLPlugin()
 {
 }
 
@@ -44,38 +45,38 @@ CFreeFrameGLPlugin::~CFreeFrameGLPlugin()
 // Default implementation of CFreeFrameGLPlugin methods
 ////////////////////////////////////////////////////////
 
-char* CFreeFrameGLPlugin::GetParameterDisplay(DWORD dwIndex) 
-{	
+char* CFreeFrameGLPlugin::GetParameterDisplay(DWORD dwIndex)
+{
 	DWORD dwType = m_pPlugin->GetParamType(dwIndex);
 	DWORD dwValue = m_pPlugin->GetParameter(dwIndex);
 
 	if ((dwValue != FF_FAIL) && (dwType != FF_FAIL))
-  {
+	{
 		if (dwType == FF_TYPE_TEXT)
-    {
+		{
 			return (char *)dwValue;
-    }
+		}
 		else
-    {
+		{
 			float fValue;
 			memcpy(&fValue, &dwValue, 4);
-			memset(s_DisplayValue, 0, 5);
-			sprintf(s_DisplayValue, "%f", fValue);
+			memset(s_DisplayValue, 0, displayValueLength);
+			sprintf_s(s_DisplayValue, displayValueLength, "%f", fValue);
 			return s_DisplayValue;
 		}
 	}
 	return NULL;
-}			
+}
 
-DWORD CFreeFrameGLPlugin::SetParameter(const SetParameterStruct* pParam) 
+DWORD CFreeFrameGLPlugin::SetParameter(const SetParameterStruct* pParam)
 {
 	return FF_FAIL;
-}		
+}
 
-DWORD CFreeFrameGLPlugin::GetParameter(DWORD dwIndex) 
-{ 
+DWORD CFreeFrameGLPlugin::GetParameter(DWORD dwIndex)
+{
 	return FF_FAIL;
-}					
+}
 
 DWORD CFreeFrameGLPlugin::GetInputStatus(DWORD dwIndex)
 {
